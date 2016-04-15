@@ -10,7 +10,7 @@ Description: The package is developed to build a CCC_model to predict the
     molecular substructures of a compound and use this information to rerank
     structural candidates proposed by fragmentation simulators
 Depends:
-    R (>= 3.2.2),
+    R (>= 3.0),
     xcms (>= 1.46.0),
     CAMERA (>= 1.26.0),
     MASS,
