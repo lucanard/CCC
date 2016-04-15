@@ -27,5 +27,5 @@ biocLite("CAMERA")
 biocLite("ChemmineR")
 biocLite("fmcsR")
 library(devtools)
-install_github("lucanard/CCC")
+install_github("lucanard/CCC", subdir="CCC_method")
 ```
