@@ -9,6 +9,8 @@ Get your predictions: The function apply.model uses the xsaFA object from CAMERA
 #### Forth step:
 Get the best candidates: The functions reorder.csv and reorder.sdf use the CCC_method features to reorder the candidate structures given by MetFrag. The functions do exactly the same, but one can be used with csv files, and the other one with the sdf files (the two possible outcomes of Metfrag). We suggest to use one or the other format depending on the fact you want to keep working on R or not. Indeed, the reorder.csv function gives a data.frame that can be saved as csv file. On the other hand, the reorder.sdf gives a SDFset file readable from the package ChemmineR. 
 
+![Sample image](https://github.com/lucanard/CCC/blob/master/CCC%20flowchart%20-%20Standard.png "CCC workflow") {
+
 # Installation
 First install all dependencies
 
