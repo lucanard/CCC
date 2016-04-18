@@ -1,4 +1,6 @@
 errorize <- function (x, errori, i2) {
+  ppms <- c(-50, -30, -10, -5, -3, 0, 3, 5, 10, 30, 50)
+  Cees <- c(-5,-4,-3,-2,-1,0,1,2,3,4,5)
   X2 <- data.frame()
   Xm <- x
   if (errori == "ppms") {

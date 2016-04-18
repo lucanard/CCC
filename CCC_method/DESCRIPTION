@@ -13,12 +13,9 @@ Depends:
     R (>= 3.0),
     xcms (>= 1.46.0),
     CAMERA (>= 1.26.0),
-    MASS,
     stringr (>= 1.0.0),
     ppls,
     glmnet,
-    BiocGenerics (>= 0.16.1),
-    pls,
     fmcsR,
     rcdk,
     ChemmineR

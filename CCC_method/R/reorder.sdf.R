@@ -1,11 +1,10 @@
-reorder.sdf <- function(directory, compi, selection) {
+reorder.sdf <- function(directory, compi) {
   setwd(directory)
   file <- list.files(pattern = "sdf", full.names = FALSE)
-  fil <- str_split(file, pattern = "_")
-  fi <- do.call(cbind, fil)
-  fil <- fi[1,]
+  fil <- str_replace(file, pattern = ".sdf", replacement="")
+  fil <- as.numeric(fil)
   candidate <- list()
-  for (i in 1:length(file)) {
+  for (i in 1:length(fil)) {
     print(fil[i])
     esp <- read.SDFstr(file[i])
     esp <- as(esp, "SDFset")
@@ -13,7 +12,7 @@ reorder.sdf <- function(directory, compi, selection) {
     es <- toString(espo)
     es <- as.vector(unlist(strsplit(es, split=", ", perl = TRUE)))
     com <- CCC_code(es)
-    predicted <- compi[selection, 10:16]
+    predicted <- compi[fil[i], 9:15]
     ebb <- apply(com, 1, '-', as.numeric(predicted))
     eb <- colSums(abs(ebb))
     eb <- eb + 1

@@ -22,12 +22,14 @@ apply.model <- function(xsaFA) {
     data = peaklist[isogroups[[group_nr]],9:(ncol(peaklist)-3)]
     int = rowSums(peaklist[isogroups[[group_nr]], 9:(ncol(peaklist)-3)])
     gro = peaklist[isogroups[[group_nr]], ncol(peaklist)]
+    rowname <- row.names(peaklist[isogroups[[group_nr]], ])
     camgroup = peaklist
     order=order(masses)
     masses=masses[order]+c(-1.007276,1.007276)[mode]
     data=data[order,]
     gro = gro[order]
     int = int[order]
+    rowname = rowname[order]
     ratios=numeric()
     ratios[1]=1
     for (i in 2:length(masses)){
@@ -42,6 +44,7 @@ apply.model <- function(xsaFA) {
     result$ratios=ratios
     result$gro = gro
     result$int = int
+    result$rowname <- rowname
     return(result)
   }
   rtsing <- function(xsaFA, intval = "into"){
@@ -175,15 +178,18 @@ apply.model <- function(xsaFA) {
   ratios <- rating(xsaFA, intval="into")
   tn <- mapply(c, (rts/60), as.matrix(ratios), SIMPLIFY = "FALSE")
   tn <- as.data.frame(t(tn))
+  tn$rowname <- lapply(tn$rowname, "[[", 1)
   mzs <- moverz(ratios)
   RTS <- times(ratios)
   CC <- Car.est(tn)
   tn <- cbind(mzs, tn, RTS, CC)
   colnames(tn)[1] <- "mzs"
-  colnames(tn)[7] <- "RTs"
-  colnames(tn)[8] <- "estC"
+  colnames(tn)[8] <- "RTs"
+  colnames(tn)[9] <- "estC"
   colnames(tn)[2] <- "allRT"
   tni <- querying(tn)
   compi <- do.call(rbind, tni)
+  row.names(compi) <- compi$rowname
+  compi$rowname <- NULL
   return(compi)
 }

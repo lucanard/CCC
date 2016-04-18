@@ -1,16 +1,18 @@
-reorder.csv <- function(directory, compi, selection) {
+reorder.csv <- function(directory, compi) {
   setwd(directory)
   file <- list.files(pattern = "csv", full.names = FALSE)
+  fil <- str_replace(file, pattern = ".sdf", replacement="")
+  fil <- as.numeric(fil)
   candidate <- list()
-  for (i in 1:length(file)) {
-    print(file[i])
+  for (i in 1:length(fil)) {
+    print(fil[i])
     files <- read.csv(file[i], stringsAsFactors=FALSE)
     name <- files[4,]
     files <- files[5:nrow(files),]
     names(files) <- name
     es <- files$Smiles
     com <- CCC_code(es)
-    predicted <- compi[selection, 10:16]
+    predicted <- compi[fil[i], 9:15]
     ebb <- apply(com, 1, '-', as.numeric(predicted))
     eb <- colSums(abs(ebb))
     eb <- eb + 1
