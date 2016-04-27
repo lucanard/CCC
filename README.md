@@ -6,7 +6,7 @@ Build the standard dataset: The dataset.building function transforms a dataset o
 Test the dataset: you need to test the your dataset to see if it is appropriate for the method. The model.testing function performs standard test and gives the results in a easy readable data.frame. Jump this step if you use the dataset given in the package (which is already validated)
 #### Third step:
 Get your predictions: The function apply.model uses the xsaFA object from CAMERA package, clusters the m/z according to their isotopic pattern, measures their isotopic ratio and gives the most probable amount of carbon atoms in the formula. From this informations, it gives the CCC_method features.
-#### Forth step:
+#### Fourth step:
 Get the best candidates: The functions reorder.csv and reorder.sdf use the CCC_method features to reorder the candidate structures given by MetFrag. The functions do exactly the same, but one can be used with csv files, and the other one with the sdf files (the two possible outcomes of Metfrag). We suggest to use one or the other format depending on the fact you want to keep working on R or not. Indeed, the reorder.csv function gives a data.frame that can be saved as csv file. On the other hand, the reorder.sdf gives a SDFset file readable from the package ChemmineR. 
 
 ![Sample image](https://github.com/lucanard/CCC/blob/master/CCC%20flowchart%20-%20Standard.png "CCC workflow") {
