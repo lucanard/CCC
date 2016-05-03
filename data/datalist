@@ -1,2 +1,0 @@
-models: bin.model.acid bin.model.bs bin.model.CO bin.model.NN bin.model.SS lasso.md.aliph lass.md.CO pls.md.phenolics pls.md.SS
-lin.numC
