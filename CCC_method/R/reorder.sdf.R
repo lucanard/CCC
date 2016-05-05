@@ -1,3 +1,12 @@
+#' Reordering function to get the best candidates from the metfRag analysis from .sdf files
+#'
+#' @param directory where the sdf files are stored 
+#' @param compi: a data.frame containing all the features extracted by the apply.model function
+#'
+#' @return a list of SDF files reordered according to the CCC method parameters
+#' @export "reorder.sdf"
+#'
+#' @examples 
 reorder.sdf <- function(directory, compi) {
   setwd(directory)
   file <- list.files(pattern = "sdf", full.names = FALSE)
@@ -12,7 +21,7 @@ reorder.sdf <- function(directory, compi) {
     es <- toString(espo)
     es <- as.vector(unlist(strsplit(es, split=", ", perl = TRUE)))
     com <- CCC_code(es)
-    predicted <- compi[fil[i], 9:15]
+    predicted <- compi[row.names(compi) == fil[i], 9:15]
     ebb <- apply(com, 1, '-', as.numeric(predicted))
     eb <- colSums(abs(ebb))
     eb <- eb + 1

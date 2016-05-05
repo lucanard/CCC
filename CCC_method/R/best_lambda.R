@@ -7,8 +7,6 @@ best_lambda <- function(X1Y, ny, alpha) {
     rmse= sqrt(apply((X1Y[train,ny]-pred)^2,2,mean))
     lam.bes=lasso.md$lambda[order(rmse)[1]]
     lam.best[i] <- drop(lam.bes)
-    rms <- rmse[order(rmse)[1]]
-    rmses[i] <- drop(rms)
     #coef(lasso.md,s=lam.best)
   }
   best <- mean(lam.best)

@@ -1,78 +1,77 @@
-apply.model <- function(xsaFA) {
-  getIsoGroups=function(xsaFA){
-    iso_groups=list()
-    for (i in 1:length(xsaFA@isotopes)){
-      temp=xsaFA@isotopes[[i]]$y
-      if (!is.null(temp)){
-        if (length(iso_groups)>=temp){
-          iso_groups[[temp]]=c(iso_groups[[temp]],i)
-        }else{
-          iso_groups[[temp]]=i
-        }
-      }
-    }
-    return(iso_groups)
+
+#' Application of the CCC method on the real data 
+#'
+#' @param peakTable: the peakTable obtained from the runLC function of the metaMS package
+#' @param polarity: the polarity of the MS experiment 
+#'
+#' @return a list of grouped features with their isotopic pattern, estimated amount of Carbon and the CCC method predictions.
+#' @export "apply.model"
+#'
+#' @examples model <- apply.model(peakTable, polarity = "negative")
+#' #' 
+apply.model <- function(peakTable, polarity) {
+  getisogroups <- function (peakTable) {
+  temp <- peakTable$isotopes == ""
+  temp2 <- peakTable[which(temp == F), ]
+  temp3 <- str_split(temp2$isotopes, coll("]["))
+  temp3 <- do.call(rbind, temp3)
+  temp3 <- cbind(str_replace(temp3[,1], coll("["), replacement = ""), temp3[,2])
+  temp3 <- as.data.frame(temp3)
+  temp3[,3] <- row.names(temp2)
+  temp4 <- temp3[order(temp3[,1], temp3[,2]),]
+  temp4 <- as.list(split(as.numeric(temp4[,3]), f = temp4[,1]))
+  iso_groups <- temp4
+  return(iso_groups)
   }
-  IsoGroup2ratios=function(xsaFA,isogroups,group_nr,peaklist){
-    if (xsaFA@polarity=="positive"){mode=1}
-    if (xsaFA@polarity=="negative"){mode=2}
-    masses=xsaFA@groupInfo[isogroups[[group_nr]],'mz']
-    camgroup <- vector()
-    gro <- vector()
-    data = peaklist[isogroups[[group_nr]],9:(ncol(peaklist)-3)]
-    int = rowSums(peaklist[isogroups[[group_nr]], 9:(ncol(peaklist)-3)])
-    gro = peaklist[isogroups[[group_nr]], ncol(peaklist)]
-    rowname <- row.names(peaklist[isogroups[[group_nr]], ])
-    camgroup = peaklist
-    order=order(masses)
-    masses=masses[order]+c(-1.007276,1.007276)[mode]
-    data=data[order,]
-    gro = gro[order]
-    int = int[order]
-    rowname = rowname[order]
-    ratios=numeric()
-    ratios[1]=1
-    for (i in 2:length(masses)){
-      to_rem = !(        ((data[1,]>0) & !is.na(data[1,]))              &        ((data[i,]>0)  & !is.na(data[i,]))       )
-      m=data[1,!to_rem]
-      m_iso=data[i,!to_rem]
-      
-      ratios[i] = sum(m_iso)/sum(m)
-    }
-    result=c()
-    result$mz=masses
-    result$ratios=ratios
-    result$gro = gro
-    result$int = int
-    result$rowname <- rowname
-    return(result)
+    IsoGroup2ratios=function(peakTable, isogroups, group_nr, polarity){
+  if (polarity=="positive"){mode=1}
+  if (polarity=="negative"){mode=2}
+    masses= peakTable[isogroups[[group_nr]],'mz']
+    data = peakTable[isogroups[[group_nr]], 8:(ncol(peakTable))]
+    int = rowSums(peakTable[isogroups[[group_nr]], 8:(ncol(peakTable))])
+    gro = peakTable[isogroups[[group_nr]], "pcgroup"]
+    rowname <- row.names(peakTable[isogroups[[group_nr]], ])
+  rts = mean(peakTable[isogroups[[group_nr]], "rt"])
+  order=order(masses)
+  masses=masses[order]+c(-1.007276,1.007276)[mode]
+  data=data[order,]
+  gro = gro[order]
+  int = int[order]
+  rowname = rowname[order]
+  rts <- rts[order]
+  ratios=numeric()
+  ratios[1]=1
+  for (i2 in 2:length(masses)){
+    to_rem = !(        ((data[1,]>0) & !is.na(data[1,]))              &        ((data[i2,]>0)  & !is.na(data[i2,]))       )
+    m=data[1,!to_rem]
+    m_iso=data[i2,!to_rem]
+    ratios[i2] = sum(m_iso)/sum(m)
   }
-  rtsing <- function(xsaFA, intval = "into"){
-    isogroups <- getIsoGroups(xsaFA)
-    rts <- sapply(isogroups,function(x) mean(peaklist[x,"rt"]))
-    return(rts)
+  result=c()
+  result$rts=rts
+  result$mz=masses
+  result$ratios=ratios
+  result$gro = gro
+  result$int = int
+  result$rowname <- rowname
+  return(result)
   }
-  rating <- function (xsaFA, intval = "into") {
-    isogroups <- getIsoGroups(xsaFA)
-    rts <- sapply(isogroups,function(x) mean(peaklist[x,"rt"]))
+  rating <- function (peakTable) {
     ratios <- list()
     for(i in 1:length(isogroups)){
-      ratios[[i]] <- IsoGroup2ratios(xsaFA,isogroups,group_nr = i, peaklist=peaklist)
+      ratios[[i]] <- IsoGroup2ratios(peakTable,isogroups,group_nr = i, polarity = polarity)
     }
     return(ratios)
   }
-  moverz <- function(ratios){
-    mzs <- vector(length=length(ratios))
-    for (i in 1:length(ratios)){
-      mzs[[i]] <- round(tn$mz[[i]][1], digits=3)
-    }
-    return(mzs)
-  }
-  times <- function(ratios){
-    RTS <- vector(length= length(ratios))
-    for (i in 1:length(ratios)){
-      RTS[[i]] <- drop(tn$V1[[i]][1])
-    }
+    Rt.est <- function(tn, peakTable) {
+    require(stringr, quietly = T)
+    short <- as.numeric(sapply(tn$rts, "[[", 1))
+    if (str_detect(tail(colnames(peakTable), n = 1L), coll("RP"))&(max(short) <= 30)) {
+      data(RTest.Rdata)
+      short <- sapply(tn$rts, "[[", 1)
+      RT.est <- predict(rts.lm, newdata = data.frame(short), interval = c("confidence"), level = 0.95)
+      RTS <- RT.est[,1]} else {RTS <- sapply(tn$rts, "[[", 1)}
+    RTS[RTS>=60] <- 60
     return(RTS)
   }
   Car.est <- function(tn) {
@@ -115,15 +114,7 @@ apply.model <- function(xsaFA) {
       IMD <- IMDP(tn)
       Sulfur <- IMD
       pX <- data.frame(RT, mass, nC, md, RMD, pC, rRMD, odd, Sulfur)
-      data(bin.model.SS)
-      data(pls.md.SS.Rdata)
-      data(pls.md.phenolics)
-      data(bin.model.acid.Rdata)
-      data(bin.model.NN.Rdata)
-      data(lasso.md.aliph.Rdata)
-      data(bin.model.CO.Rdata)
-      data(lasso.md.CO.Rdata)
-      data(bin.model.bs.Rdata)
+      data(models.Rdata)
       SS <- predict(bin.model.SS, pX, type="response")
       acid <- predict(bin.model.acid, pX, type="response")
       NN <- predict(bin.model.NN, pX, type="response")
@@ -138,8 +129,8 @@ apply.model <- function(xsaFA) {
       strtn <- as.data.frame(strtn)
       strtn <- round(strtn)
       strtn[strtn<0] <- 0
-      names(strtn[2]) <- "phenolics"
-      names(strtn[5]) <- "aliph"
+      names(strtn)[2] <- "phenolics"
+      names(strtn)[5] <- "aliph"
       return(strtn)
     }
     grouping <- function (tn){
@@ -148,39 +139,22 @@ apply.model <- function(xsaFA) {
       tn$gro <- gro
       return(tn)
     }
-    ps_spec <- function(tn, peaklist){
-      psspectra <- list()
-      for (i in 1:length(tn$gro)) {
-        mzo = peaklist$mz[which(peaklist$pcgroup == tn$gro [i])]
-        int = rowSums(peaklist[which(peaklist$pcgroup == tn$gro [i]),9:(ncol(peaklist)-3)])
-        temp1 = data.frame(mzo, int)
-        psspectra[[i]] = drop(temp1)
-      }
-      names(psspectra) <- tn$gro
-      order <- order(names(psspectra))
-      psspectra <- unique(psspectra[order])
-      return(psspectra)
-    }
-    
     strtn <- structuring(tn)
     tn <- grouping(tn)
-    ps_spectra <- ps_spec(tn, peaklist)
     str <- do.call(list, strtn)
     tni <- cbind(tn, strtn)
     tni <- split(tni, f = tni$gro)
     return (tni)
   }
-  if (str_detect(xsaFA@xcmsSet@filepaths[[1]], coll("neg")) == TRUE) {
-    xsaFA@polarity <- "negative"} else {xsaFA@polarity <- "positive"}
-  peaklist <- getPeaklist(xsaFA, intval='into')
-  isogroups <- getIsoGroups(xsaFA)
-  rts <- rtsing(xsaFA, intval = "into")
-  ratios <- rating(xsaFA, intval="into")
-  tn <- mapply(c, (rts/60), as.matrix(ratios), SIMPLIFY = "FALSE")
+  peakTable <- metaMS.set$PeakTable
+  isogroups <- getisogroups(peakTable)
+  ratios <- rating(peakTable)
+  tn <- mapply(c, as.matrix(ratios), SIMPLIFY = "FALSE")
   tn <- as.data.frame(t(tn))
   tn$rowname <- lapply(tn$rowname, "[[", 1)
-  mzs <- moverz(ratios)
-  RTS <- times(ratios)
+  tn$rts <- sapply(tn$rts, "[[", 1)
+  mzs <- round(as.numeric(sapply(tn$mz, "[[", 1)), digits = 3)
+  RTS <- Rt.est(tn, peakTable)
   CC <- Car.est(tn)
   tn <- cbind(mzs, tn, RTS, CC)
   colnames(tn)[1] <- "mzs"
@@ -188,8 +162,5 @@ apply.model <- function(xsaFA) {
   colnames(tn)[9] <- "estC"
   colnames(tn)[2] <- "allRT"
   tni <- querying(tn)
-  compi <- do.call(rbind, tni)
-  row.names(compi) <- compi$rowname
-  compi$rowname <- NULL
-  return(compi)
+  return(tni)
 }

@@ -1,3 +1,16 @@
+#' CCC_model testing for the evaluation of the standards dataset
+#' 
+#' @param X1Y: the dataset given by the dataset.building function 
+#' @param ntest: the number of test to repeat on the dataset 
+#' @param ny: the Y dependent variable under evaluation 
+#' @param model: the statistical model to apply: choose between "pls", "lasso", "ridge", "logistic"  
+#' @param errori: the kind of error you want to test on the dataset. Choose between "ppms", (mass accuracy error) "Cees" (Carbon estimation error), and "nerr" (normal distributed error) 
+#' @param per.test: if TRUE it performs permutation test on the Y value, to determine the random level of relationship between X and Y. default is FALSE 
+#'
+#' @return a list containing the values of the accuracy of the model across the error values. The accuracy is given with 3 parameters: the means_All (percentage of correct predictions) sds_All (percentage of standard deviation) and the RMSE
+#' @export "model.testing"
+#'
+#' @examples results <- model.testing(X1Y, ntest=1000, ny=1, model = "logistic", errori = "nerr", per.test = F)
 model.testing <- function(X1Y, ntest, ny, model, errori, per.test = FALSE) {
   train <- lapply(seq(1,ntest), function(x) sample(1:nrow(X1Y), 30))
   X <- lapply(train, function(x) X1Y[-x,10:18])

@@ -1,3 +1,11 @@
+#' Chemical standards dataset building for the construction of the CCC method dataset
+#'
+#' @param x: a data.frame containing the database of chemical standards of your laboratory 
+#'
+#' @return the basic dataset to build a CCC_method
+#' @export "dataset.building"
+#'
+#' @examples X1Y <- dataset.building(STD_RP)
 dataset.building <- function(x) {
   is.odd <- function(x) x %% 2 != 0
   Pyri = "c1ccncc1"
