@@ -19,7 +19,7 @@ install.packages("devtools")
 install.packages("stringr")
 install.packages("rcdk")
 install.packages("ppls")
-install.package("glmnet")
+install.packages("glmnet")
 ```
 Then install dependencies from bioconductor
 
