@@ -12,7 +12,7 @@ Get the best candidates: The functions reorder.csv and reorder.sdf use the CCC_m
 ![Sample image](https://github.com/lucanard/CCC/blob/master/CCC%20flowchart%20-%20Standard.png "CCC workflow") {
 
 # Installation
-First install all dependencies
+First install dependencies from CRAN
 
 ```R
 install.packages("devtools")
@@ -20,11 +20,19 @@ install.packages("stringr")
 install.packages("rcdk")
 install.packages("ppls")
 install.package("glmnet")
+```
+Then install dependencies from bioconductor
+
+```R
 source("http://bioconductor.org/biocLite.R")
 biocLite()
 library(BiocInstaller)
 biocLite("ChemmineR")
 biocLite("fmcsR")
+```
+Last, install metfRag and the CCC_method from github
+
+```R
 library(devtools)
 install_github("c-ruttkies/MetFragR/metfRag")
 install_github("lucanard/CCC", subdir="CCC_method")
