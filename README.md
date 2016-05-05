@@ -1,5 +1,5 @@
 # CCC method
-The package uses the principles of the Compound Characteristics Comparison method to reorder candidate structures given by the in-silico fragmenter MetFrag and return the best candidates. To perform the analysis with your own data, you need to follow the instructions in the order reported here.
+The package uses the principles of the Compound Characteristics Comparison method to reorder candidate structures given by the in-silico fragmenter MetFrag and returns the best candidates. To perform the analysis with your own data, you need to follow the instructions in the order reported here.
 #### First step: 
 Build the standard dataset: The dataset.building function transforms a dataset of standards into a dataset readable by the CCC_method. the original dataset must contain the compound name, the molecular formula, the monoisotopic mass, the retention time and the smiles code. NB: If you use the dataset given by the package, you can jump this step.
 #### Second step:
@@ -18,16 +18,14 @@ First install all dependencies
 install.packages("devtools")
 install.packages("stringr")
 install.packages("rcdk")
-install.packages("pls")
 install.packages("ppls")
 install.package("glmnet")
 source("http://bioconductor.org/biocLite.R")
 biocLite()
 library(BiocInstaller)
-biocLite("xcms")
-biocLite("CAMERA")
 biocLite("ChemmineR")
 biocLite("fmcsR")
 library(devtools)
+install_github("c-ruttkies/MetFragR/metfRag")
 install_github("lucanard/CCC", subdir="CCC_method")
 ```
