@@ -31,9 +31,9 @@ errorize <- function (x, errori, i2) {
     x[,7] <- ((x[,2]-(x[,3]*12) - round(x[,2]-(x[,3]*12)))/(round(x[,2]-(x[,3]*12))))*1000000
   }
   if (errori == "none") {x <- x}
-  print(sqrt(mean((x[,3]-Xm[,3])^2)))
-  print(sqrt(mean((x[,2]-Xm[,2])^2)))
-  print(sqrt(mean((x[,7]-Xm[,7])^2)))
+  tab <- data.frame(i2, 11)
+  names(tab) <- c("n.test", "tot.test")
+  print(tab, row.names = F)
   X2 <- x
   return(X2)
 }

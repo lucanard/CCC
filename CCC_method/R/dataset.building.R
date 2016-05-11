@@ -1,12 +1,14 @@
-#' Chemical standards dataset building for the construction of the CCC method dataset
-#'
-#' @param x: a data.frame containing the database of chemical standards of your laboratory 
-#'
+#' @title dataset construction for the application of the CCC method
+#' @description the function builds the dataset to apply the the CCC_method to an in-house dataset of standards. The new-built must be saved as model 
+#' @param x must be a data.frame containing the compounds' names ("compound"), the monoisotopic mass ("MM"), the retention time ("RT"), the chemical formula ("Formula") and the smiles ("smiles")
 #' @return the basic dataset to build a CCC_method
 #' @export "dataset.building"
-#'
-#' @examples X1Y <- dataset.building(STD_RP)
+#' @author Luca Narduzzi "nardluca@gmail.com"
+#' @examples 
+#' STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = F)
+#' X1Y <- dataset.building(STD_RP)
 dataset.building <- function(x) {
+  options(warnings = F)
   is.odd <- function(x) x %% 2 != 0
   Pyri = "c1ccncc1"
   Pyrr = "c1cc[nH]c1"

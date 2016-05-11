@@ -1,14 +1,16 @@
-#' Reordering function to get the best candidates from the metfRag analysis from .sdf files
-#'
-#' @param directory where the sdf files are stored 
-#' @param compi: a data.frame containing all the features extracted by the apply.model function
+#' @title Reordering function to get the best candidates from the metfRag analysis from .sdf files
+#' @description 
+#' @param directory where the sdf files are stored. The file name must correspond to the feature number (rowname) in the original peaktable 
+#' @param tni: a list of grouped features given by the apply.model function 
 #'
 #' @return a list of SDF files reordered according to the CCC method parameters
 #' @export "reorder.sdf"
-#'
+#' @author Luca Narduzzi "nardluca@gmail.com"
 #' @examples 
-reorder.sdf <- function(directory, compi) {
+reorder.sdf <- function(directory, tni) {
   setwd(directory)
+  compi <- do.call(rbind, tni)
+  row.names(compi) <- compi$rowname
   file <- list.files(pattern = "sdf", full.names = FALSE)
   fil <- str_replace(file, pattern = ".sdf", replacement="")
   fil <- as.numeric(fil)

@@ -1,13 +1,15 @@
-
-#' Application of the CCC method on the real data 
-#'
+#' @title Application of the CCC method on the real data 
+#' @description the function uses the peakTable given by metaMS to group the isotopic patterns and it uses this data to give an estimation of their amount of Carbons and predicts the CCC Y dependent variables on each of the isotopic pattern.
 #' @param peakTable: the peakTable obtained from the runLC function of the metaMS package
 #' @param polarity: the polarity of the MS experiment 
-#'
+#' @usage apply.model(peakTable, polarity)
+#' 
 #' @return a list of grouped features with their isotopic pattern, estimated amount of Carbon and the CCC method predictions.
 #' @export "apply.model"
-#'
-#' @examples model <- apply.model(peakTable, polarity = "negative")
+#' @author Luca Narduzzi "nardluca@gmail.com"
+#' @examples 
+#' data(peakTable)
+#' model <- apply.model(peakTable, polarity = "negative")
 #' #' 
 apply.model <- function(peakTable, polarity) {
   getisogroups <- function (peakTable) {
@@ -67,7 +69,7 @@ apply.model <- function(peakTable, polarity) {
     require(stringr, quietly = T)
     short <- as.numeric(sapply(tn$rts, "[[", 1))
     if (str_detect(tail(colnames(peakTable), n = 1L), coll("RP"))&(max(short) <= 30)) {
-      data(RTest.Rdata)
+      data(rts.lm)
       short <- sapply(tn$rts, "[[", 1)
       RT.est <- predict(rts.lm, newdata = data.frame(short), interval = c("confidence"), level = 0.95)
       RTS <- RT.est[,1]} else {RTS <- sapply(tn$rts, "[[", 1)}
@@ -114,7 +116,15 @@ apply.model <- function(peakTable, polarity) {
       IMD <- IMDP(tn)
       Sulfur <- IMD
       pX <- data.frame(RT, mass, nC, md, RMD, pC, rRMD, odd, Sulfur)
-      data(models.Rdata)
+      data("bin.model.CO")
+      data("bin.model.NN")
+      data("bin.model.SS")
+      data("bin.model.bs")
+      data("bin.model.acid")
+      data("lasso.md.CO")
+      data("lasso.md.aliph")
+      data("pls.md.SS")
+      data("pls.md.phenolics")
       SS <- predict(bin.model.SS, pX, type="response")
       acid <- predict(bin.model.acid, pX, type="response")
       NN <- predict(bin.model.NN, pX, type="response")
@@ -146,7 +156,7 @@ apply.model <- function(peakTable, polarity) {
     tni <- split(tni, f = tni$gro)
     return (tni)
   }
-  peakTable <- metaMS.set$PeakTable
+  peakTable <- peakTable
   isogroups <- getisogroups(peakTable)
   ratios <- rating(peakTable)
   tn <- mapply(c, as.matrix(ratios), SIMPLIFY = "FALSE")

@@ -1,14 +1,16 @@
 #' Reordering function to get the best candidates from the metfRag analysis from .csv files
 #'
-#' @param directory where the .csv files are stored 
-#' @param compi: a data.frame containing all the features extracted by the apply.model function 
+#' @param directory where the .csv files are stored. The file name must correspond to the feature number (rowname) in the original peaktable  
+#' @param tni: a list of grouped features given by the apply.model function 
 #'
 #' @return a list of csv files reordered according to the CCC method parameters
 #' @export "reorder.csv"
-#'
+#' @author Luca Narduzzi "nardluca@gmail.com"
 #' @examples
-reorder.csv <- function(directory, compi) {
+reorder.csv <- function(directory, tni) {
   setwd(directory)
+  compi <- do.call(rbind, tni)
+  row.names(compi) <- compi$rowname
   file <- list.files(pattern = "csv", full.names = FALSE)
   fil <- str_replace(file, pattern = ".csv", replacement="")
   fil <- as.numeric(fil)

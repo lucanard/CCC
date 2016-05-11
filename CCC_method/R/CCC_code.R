@@ -1,4 +1,5 @@
 CCC_code <- function(x) {
+  options(warn = -1)
   mat <- function(x){
     phe <- character(length=length(x))
     for (i in 1:length(x))
