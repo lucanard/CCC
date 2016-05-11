@@ -15,9 +15,12 @@ ps_spec(tni, peakTable)
 "ps_spectra: all the pseudospectra per each group of feature from the list tni"
 }
 \description{
-Pseudospectra extraction for MSe data analysis with metfRag
+The function extracts all the pseudospectra given by the CAMERA grouping, which also have at least one isotopic group in the grouped isotopic pattern given by the apply.model function
 }
 \examples{
 ps_spectra <- ps_spec(tni, peakTable)
+}
+\author{
+Luca Narduzzi "nardluca@gmail.com"
 }
 

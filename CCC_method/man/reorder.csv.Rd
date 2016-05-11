@@ -4,17 +4,20 @@
 \alias{reorder.csv}
 \title{Reordering function to get the best candidates from the metfRag analysis from .csv files}
 \usage{
-\method{reorder}{csv}(directory, compi)
+\method{reorder}{csv}(directory, tni)
 }
 \arguments{
-\item{directory}{where the .csv files are stored}
+\item{directory}{where the .csv files are stored. The file name must correspond to the feature number (rowname) in the original peaktable}
 
-\item{compi:}{a data.frame containing all the features extracted by the apply.model function}
+\item{tni:}{a list of grouped features given by the apply.model function}
 }
 \value{
 a list of csv files reordered according to the CCC method parameters
 }
 \description{
 Reordering function to get the best candidates from the metfRag analysis from .csv files
+}
+\author{
+Luca Narduzzi "nardluca@gmail.com"
 }
 

@@ -15,10 +15,14 @@ apply.model(peakTable, polarity)
 a list of grouped features with their isotopic pattern, estimated amount of Carbon and the CCC method predictions.
 }
 \description{
-Application of the CCC method on the real data
+the function uses the peakTable given by metaMS to group the isotopic patterns and it uses this data to give an estimation of their amount of Carbons and predicts the CCC Y dependent variables on each of the isotopic pattern.
 }
 \examples{
+data(peakTable)
 model <- apply.model(peakTable, polarity = "negative")
 #' 
+}
+\author{
+Luca Narduzzi "nardluca@gmail.com"
 }
 
