@@ -7,7 +7,7 @@
 ps_spec(tni, peakTable)
 }
 \arguments{
-\item{"tni:}{the list of grouped features obtained from the function apply model"}
+\item{"tni:}{the list of grouped features obtained from the function apply.model"}
 
 \item{"peakTable:}{the peakTable obtained from the runLC function from metaMS"}
 }
@@ -18,6 +18,7 @@ ps_spec(tni, peakTable)
 The function extracts all the pseudospectra given by the CAMERA grouping, which also have at least one isotopic group in the grouped isotopic pattern given by the apply.model function
 }
 \examples{
+tni <- apply.model(peakTable, polarity = "negative")
 ps_spectra <- ps_spec(tni, peakTable)
 }
 \author{

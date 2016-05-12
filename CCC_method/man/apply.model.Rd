@@ -4,22 +4,24 @@
 \alias{apply.model}
 \title{Application of the CCC method on the real data}
 \usage{
-apply.model(peakTable, polarity)
+apply.model(peakTable, polarity, models = NULL)
 }
 \arguments{
 \item{peakTable:}{the peakTable obtained from the runLC function of the metaMS package}
 
 \item{polarity:}{the polarity of the MS experiment}
+
+\item{models:}{the statistical models to use in the CCC_method. Default is NULL, so the original models are loaded and applied. Elsewhere, own models can be applied , building them using the function "model.building".}
 }
 \value{
 a list of grouped features with their isotopic pattern, estimated amount of Carbon and the CCC method predictions.
 }
 \description{
-the function uses the peakTable given by metaMS to group the isotopic patterns and it uses this data to give an estimation of their amount of Carbons and predicts the CCC Y dependent variables on each of the isotopic pattern.
+the function uses the peakTable given by metaMS to group the isotopic patterns and it uses this data to give an estimation of their amount of Carbons and predicts the CCC Y dependent variables on each of the isotopic pattern. It can also handle statistical models built on different standards dataset using the function model.building.
 }
 \examples{
 data(peakTable)
-model <- apply.model(peakTable, polarity = "negative")
+tni <- apply.model(peakTable, polarity = "negative")
 #' 
 }
 \author{
