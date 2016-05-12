@@ -7,7 +7,7 @@
 #' @param errori: the kind of error you want to test on the dataset. Choose between "ppms", (mass accuracy error) "Cees" (Carbon estimation error), and "nerr" (normal distributed error) 
 #' @param per.test: if TRUE it performs permutation test on the Y value, to determine the random level of relationship between X and Y. default is FALSE 
 #' @author Luca Narduzzi "nardluca@gmail.com"
-#' @return a list containing the values of the accuracy of the model across the error values. The accuracy is given with 3 parameters: the means_All (percentage of correct predictions) sds_All (percentage of standard deviation) and the RMSE (root mean squared error)
+#' @return a list containing the values of the accuracy of the model across the error values. The accuracy is given with 3 parameters: the means_All (percentage of correct predictions) sds_All (percentage of standard deviation) and the RMSE (root mean squared error). It returns also a plot of the test, indicating the accuracy mean across the measurement error.
 #' @export "model.testing"
 #'
 #' @examples 

@@ -1,17 +1,18 @@
 #' @title Application of the CCC method on the real data 
-#' @description the function uses the peakTable given by metaMS to group the isotopic patterns and it uses this data to give an estimation of their amount of Carbons and predicts the CCC Y dependent variables on each of the isotopic pattern.
+#' @description the function uses the peakTable given by metaMS to group the isotopic patterns and it uses this data to give an estimation of their amount of Carbons and predicts the CCC Y dependent variables on each of the isotopic pattern. It can also handle statistical models built on different standards dataset using the function model.building.
 #' @param peakTable: the peakTable obtained from the runLC function of the metaMS package
-#' @param polarity: the polarity of the MS experiment 
-#' @usage apply.model(peakTable, polarity)
+#' @param polarity: the polarity of the MS experiment
+#' @param models: the statistical models to use in the CCC_method. Default is NULL, so the original models are loaded and applied. Elsewhere, own models can be applied , building them using the function "model.building".   
+#' @usage apply.model(peakTable, polarity, models = NULL)
 #' 
 #' @return a list of grouped features with their isotopic pattern, estimated amount of Carbon and the CCC method predictions.
 #' @export "apply.model"
 #' @author Luca Narduzzi "nardluca@gmail.com"
 #' @examples 
 #' data(peakTable)
-#' model <- apply.model(peakTable, polarity = "negative")
+#' tni <- apply.model(peakTable, polarity = "negative")
 #' #' 
-apply.model <- function(peakTable, polarity) {
+apply.model <- function(peakTable, polarity, models = NULL) {
   getisogroups <- function (peakTable) {
   temp <- peakTable$isotopes == ""
   temp2 <- peakTable[which(temp == F), ]
@@ -116,6 +117,7 @@ apply.model <- function(peakTable, polarity) {
       IMD <- IMDP(tn)
       Sulfur <- IMD
       pX <- data.frame(RT, mass, nC, md, RMD, pC, rRMD, odd, Sulfur)
+      if (is.null(models)) {
       data("bin.model.CO")
       data("bin.model.NN")
       data("bin.model.SS")
@@ -125,6 +127,15 @@ apply.model <- function(peakTable, polarity) {
       data("lasso.md.aliph")
       data("pls.md.SS")
       data("pls.md.phenolics")
+      } else {
+        bin.model.SS <- models[[1]]
+        bin.model.acid <- models[[4]]
+        bin.model.NN <- models[[5]]
+        bin.model.CO <- models[[8]]
+        bin.model.bs <- models[[9]]
+        lasso.md.aliph <- models[[7]]
+        pls.md.phenolics <- models[[3]]
+      }
       SS <- predict(bin.model.SS, pX, type="response")
       acid <- predict(bin.model.acid, pX, type="response")
       NN <- predict(bin.model.NN, pX, type="response")
