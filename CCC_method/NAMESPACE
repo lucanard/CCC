@@ -2,6 +2,7 @@
 
 export("apply.model")
 export("dataset.building")
+export("model.building")
 export("model.testing")
 export("ps_spec")
 export("reorder.csv")
