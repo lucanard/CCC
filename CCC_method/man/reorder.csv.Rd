@@ -4,7 +4,7 @@
 \alias{reorder.csv}
 \title{Reordering function to get the best candidates from the metfRag analysis from .csv files}
 \usage{
-\method{reorder}{csv}(directory, tni)
+reorder.csv(directory, tni)
 }
 \arguments{
 \item{directory}{where the .csv files are stored. The file name must correspond to the feature number (rowname) in the original peaktable}
@@ -15,7 +15,12 @@
 a list of csv files reordered according to the CCC method parameters
 }
 \description{
-Reordering function to get the best candidates from the metfRag analysis from .csv files
+The function reorder the metfrag candidates using the information given by the CCC_method. It uploads the .csv files from a directory, and performs reordering of the data inside each file. It returns a data.frame containing all the files together. NB: the markers list must correspond to the original raw number of the pekaTable.
+}
+\examples{
+data (peakTable)
+tni <- apply.model(peakTable, polarity = "negative")
+
 }
 \author{
 Luca Narduzzi "nardluca@gmail.com"

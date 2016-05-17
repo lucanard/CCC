@@ -18,6 +18,7 @@ ps_spec(tni, peakTable)
 The function extracts all the pseudospectra given by the CAMERA grouping, which also have at least one isotopic group in the grouped isotopic pattern given by the apply.model function
 }
 \examples{
+data("PeakTable")
 tni <- apply.model(peakTable, polarity = "negative")
 ps_spectra <- ps_spec(tni, peakTable)
 }
