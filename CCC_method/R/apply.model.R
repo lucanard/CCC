@@ -68,17 +68,16 @@ apply.model <- function(peakTable, polarity, models = NULL) {
   }
     Rt.est <- function(tn, peakTable) {
     require(stringr, quietly = T)
-    short <- as.numeric(sapply(tn$rts, "[[", 1))
-    if (str_detect(tail(colnames(peakTable), n = 1L), coll("RP"))&(max(short) <= 30)) {
-      data(rts.lm)
-      short <- sapply(tn$rts, "[[", 1)
+    if (str_detect(tail(colnames(peakTable), n = 1L), coll("RP")) & (max(peakTable$rt) <= 30)) {
+      load(system.file("extdata", "rts.lm.rda", package = "CCC"))
+      short <- as.numeric(sapply(tn$rts, "[[", 1))
       RT.est <- predict(rts.lm, newdata = data.frame(short), interval = c("confidence"), level = 0.95)
-      RTS <- RT.est[,1]} else {RTS <- sapply(tn$rts, "[[", 1)}
+      RTS <- RT.est[,1]} else {RTS <- as.numeric(sapply(tn$rts, "[[", 1))}
     RTS[RTS>=60] <- 60
     return(RTS)
   }
   Car.est <- function(tn) {
-    data(lin.numC)
+    load(system.file("extdata", "lin.numC.rda", package = "CCC"))
     temp3 =vector()
     for (i in 1:nrow(tn)){
       temp3[[i]] <- as.vector(tn$ratios[[i]][2])/as.vector(tn$ratios[[i]][1])
@@ -118,15 +117,15 @@ apply.model <- function(peakTable, polarity, models = NULL) {
       Sulfur <- IMD
       pX <- data.frame(RT, mass, nC, md, RMD, pC, rRMD, odd, Sulfur)
       if (is.null(models)) {
-      data("bin.model.CO")
-      data("bin.model.NN")
-      data("bin.model.SS")
-      data("bin.model.bs")
-      data("bin.model.acid")
-      data("lasso.md.CO")
-      data("lasso.md.aliph")
-      data("pls.md.SS")
-      data("pls.md.phenolics")
+      load(system.file("extdata", "bin.model.acid.rda", package = "CCC"))
+      load(system.file("extdata","bin.model.NN.rda", package ="CCC"))
+      load(system.file("extdata","bin.model.SS.rda", package ="CCC"))
+      load(system.file("extdata","bin.model.bs.rda", package ="CCC"))
+      load(system.file("extdata","bin.model.CO.rda", package ="CCC"))
+      load(system.file("extdata","lasso.md.CO.rda", package ="CCC"))
+      load(system.file("extdata","lasso.md.aliph.rda", package ="CCC"))
+      load(system.file("extdata","pls.md.SS.rda", package ="CCC"))
+      load(system.file("extdata","pls.md.phenolics.rda", package ="CCC"))
       } else {
         bin.model.SS <- models[[1]]
         bin.model.acid <- models[[4]]

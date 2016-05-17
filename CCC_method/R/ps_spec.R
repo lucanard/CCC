@@ -7,20 +7,15 @@
 #' @export "ps_spec"
 #' @author Luca Narduzzi "nardluca@gmail.com"
 #' @examples 
+#' data("PeakTable")
 #' tni <- apply.model(peakTable, polarity = "negative")
 #' ps_spectra <- ps_spec(tni, peakTable)
-ps_spec <- function(tni, peakTable){
+ps_spec <- function(tni, peakTable) {
   compi <- do.call(rbind, tni)
-  row.names(compi) <- compi$rowname
-  psspectra <- list()
-  for (i in 1:length(compi$gro)) {
-    mzo = peakTable$mz[which(peakTable$pcgroup == compi$gro [i])]
-    int = rowSums(peakTable[which(peakTable$pcgroup == compi$gro [i]),8:(ncol(peakTable))])
-    temp1 = data.frame(mzo, int)
-    psspectra[[i]] = drop(temp1)
-  }
-  names(psspectra) <- compi$gro
-  order <- order(names(psspectra))
-  psspectra <- unique(psspectra[order])
-  return(psspectra)
+  groups <- unique(compi$gro)
+  mzs <- unique(peakTable$mz[peakTable$pcgroup %in% groups])
+  int <- rowSums(peakTable[peakTable$pcgroup %in% groups, 8:ncol(peakTable)])
+  gro <- peakTable$pcgroup[peakTable$pcgroup %in% groups]
+  ps <- data.frame(mzs, int, gro)
+  return(ps)
 }

@@ -1,5 +1,5 @@
 require(rcdk)
-data(FinSTD)
+load(system.file("extdata", "FinSTD.rda", package = "CCC"))
 molecules <- parse.smiles(FinSTD$smiles, kekulise=TRUE)
 xlogp <- sapply(molecules, function(x) get.xlogp(x))
 rts <- FinSTD$RT[which(!is.na(FinSTD$RT))]
