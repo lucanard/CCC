@@ -1,7 +1,6 @@
 Package: CCC
 Type: Package
-Title: Compounds characteristics comparison for the identification of unknown
-    metabolites
+Title: Compounds characteristics comparison for the identification of unknown metabolites
 Version: 0.1
 Date: 2015-11-26
 Author: Luca Narduzzi
