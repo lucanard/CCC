@@ -1,16 +1,16 @@
-#' @title Reordering function to get the best candidates from the metfRag analysis from .csv files
-#' @description The function reorder the metfrag candidates using the information given by the CCC_method. It uploads the .csv files from a directory, and performs reordering of the data inside each file. It returns a data.frame containing all the files together. NB: the markers list must correspond to the original raw number of the pekaTable. 
+#' @title Ranking function to get the best candidates from the metfRag analysis from .csv files
+#' @description The function reorders the metfrag candidates using the information given by the CCC_method. It uploads the .csv files from a directory, and performs reordering of the data inside each file. It returns a data.frame containing all the files together. NB: the name of the .csv file must correspond to the original raw number of the markers in the peakTable. 
 #' @param directory where the .csv files are stored. The file name must correspond to the feature number (rowname) in the original peaktable  
-#' @param tni: a list of grouped features given by the apply.model function 
-#' @usage reorder.csv(directory, tni)
+#' @param tni is a list of grouped features given by the CCC.peakTable/CCC.xsaFA function 
+#' @usage rank.csv(directory, tni)
 #' @return a list of csv files reordered according to the CCC method parameters
-#' @export "reorder.csv"
+#' @export "rank.csv"
 #' @author Luca Narduzzi "nardluca@gmail.com"
 #' @examples
 #' data (peakTable)
 #' tni <- apply.model(peakTable, polarity = "negative")
-#' 
-reorder.csv <- function(directory, tni) {
+#' candidates <- rank.csv("H:/R/CCC/CCC_method/inst/extdata/CSV", tni)
+rank.csv <- function(directory, tni) {
   setwd(directory)
   compi <- do.call(rbind, tni)
   row.names(compi) <- compi$rowname

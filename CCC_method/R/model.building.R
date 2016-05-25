@@ -1,8 +1,8 @@
 #' @title Build your own model for the CCC_method
 #' @description the function builds the statistical models to predict the Y dependent variables of theCCC_method  from a chemical standards dataset.   
-#' @param X1Y: the dataset built by the dataset building function
-#' @param ny: the Y dependent variable you want to build the model on (select a value between 1 and 9). Default option includes all the Y variables used in the CCC_method
-#' @param models: the statistical model you want to use to build the model. The options inclued logistic ("logistic"), lasso ("lasso"), ridge ("ridge"), pls ("pls"), and penalized-pls ("b_ppls"). The default option builds the models according to the CCC_method.  
+#' @param X1Y the dataset built by the dataset building function
+#' @param ny the Y dependent variable you want to build the model on (select a value between 1 and 9). Default option includes all the Y variables used in the CCC_method
+#' @param models the statistical model you want to use to build the model. The options inclued logistic ("logistic"), lasso ("lasso"), ridge ("ridge"), pls ("pls"), and penalized-pls ("b_ppls"). The default option builds the models according to the CCC_method.  
 #' @usage model.building(X1Y, ny, models)
 #' @return a list of statistical models to perform the CCC approach 
 #' @export "model.building"

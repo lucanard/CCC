@@ -1,3 +1,19 @@
+#' @title Online use of metfRag package to obtain MS/MS analysis of the markers using MSe data, starting from the tni list given by the function CCC.peakTable or CCC.xsaFA 
+#' @description The function si a wrapper to use the run.metfrag function on all the markers using the TNI table and the CCC-method
+#' @param tni the list of isotopic clusters obtained from the CCC.peakTable function or CCC.xsaFA function 
+#' @param ps_spectra the pseudo_spectra obtained from the ps_spec function 
+#' @param threshold the threhold to apply to use the fragment in the MS/MS analysis. default is 1000
+#' @param markers a list of markers obtained from the analysis, indicates as row.name of the original peakTable/peaklist  
+#' @usage metfragging(tni, ps_spectra, threshold, markers)
+#' @return the scores given by metfRag 
+#' @export "metfragging"
+#' @author Luca Narduzzi "nardluca@gmail.com"
+#' @examples 
+#' data(peakTable)
+#' tni <- CCC.peakTable(peakTable, polarity "negative")
+#' ps_spectra <- ps_spec(tni, peakTable)
+#' scores <- metfragging(tni, ps_spectra)
+#' 
 metfragging <- function(tni, ps_spectra, threshold = 1000, markers = NULL) {
 score <- list()
 scores <- list()
