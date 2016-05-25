@@ -7,11 +7,11 @@
 model.testing(X1Y, ntest, ny, model, errori, per.test = FALSE)
 }
 \arguments{
-\item{X1Y:}{the dataset given by the dataset.building function}
+\item{X1Y}{the dataset given by the dataset.building function}
 
-\item{ntest:}{the number of test to repeat on the dataset}
+\item{ntest}{the number of test to repeat on the dataset}
 
-\item{ny:}{the Y dependent variable under evaluation}
+\item{ny}{the Y dependent variable under evaluation}
 
 \item{model:}{the statistical model to apply: choose between "pls", "lasso", "ridge", "logistic"}
 

@@ -4,12 +4,14 @@
 \alias{ps_spec}
 \title{Pseudospectra extraction for MSe data analysis with metfRag}
 \usage{
-ps_spec(tni, peakTable)
+ps_spec(tni, peakTable, peaklist)
 }
 \arguments{
-\item{"tni:}{the list of grouped features obtained from the function apply.model"}
+\item{tni}{the list of grouped features obtained from the function apply.model}
 
-\item{"peakTable:}{the peakTable obtained from the runLC function from metaMS"}
+\item{peakTable}{the peakTable obtained from the runLC function from metaMS}
+
+\item{peaklist}{a peaklist object obtain from the function getpeaklist from CAMERA}
 }
 \value{
 "ps_spectra: all the pseudospectra per each group of feature from the list tni"

@@ -7,11 +7,11 @@
 model.building(X1Y, ny, models)
 }
 \arguments{
-\item{X1Y:}{the dataset built by the dataset building function}
+\item{X1Y}{the dataset built by the dataset building function}
 
-\item{ny:}{the Y dependent variable you want to build the model on (select a value between 1 and 9). Default option includes all the Y variables used in the CCC_method}
+\item{ny}{the Y dependent variable you want to build the model on (select a value between 1 and 9). Default option includes all the Y variables used in the CCC_method}
 
-\item{models:}{the statistical model you want to use to build the model. The options inclued logistic ("logistic"), lasso ("lasso"), ridge ("ridge"), pls ("pls"), and penalized-pls ("b_ppls"). The default option builds the models according to the CCC_method.}
+\item{models}{the statistical model you want to use to build the model. The options inclued logistic ("logistic"), lasso ("lasso"), ridge ("ridge"), pls ("pls"), and penalized-pls ("b_ppls"). The default option builds the models according to the CCC_method.}
 }
 \value{
 a list of statistical models to perform the CCC approach
