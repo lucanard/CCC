@@ -34,7 +34,7 @@ IsoGroup2ratios=function(xsaFA,isogroups,group_nr,peaklist){
   int = rowSums(peaklist[isogroups[[group_nr]], 9:(ncol(peaklist)-3)])
   gro = peaklist[isogroups[[group_nr]], ncol(peaklist)]
   rowname <- row.names(peaklist[isogroups[[group_nr]], ])
-  rts = mean(peakTable[isogroups[[group_nr]], "rt"])
+  rts = (mean(peaklist[isogroups[[group_nr]], "rt"]))/60
   order=order(masses)
   masses=masses[order]+c(-1.007276,1.007276)[mode]
   data=data[order,]
@@ -79,7 +79,7 @@ Rt.est <- function(tn, peaklist) {
   return(RTS)
 }
 Car.est <- function(tn) {
-  data(lin.numC)
+  load(system.file("extdata", "lin.numC.rda", package = "CCC"))
   temp3 =vector()
   for (i in 1:nrow(tn)){
     temp3[[i]] <- as.vector(tn$ratios[[i]][2])/as.vector(tn$ratios[[i]][1])
@@ -151,8 +151,8 @@ querying <- function(tn, intval = "into"){
     strtn <- as.data.frame(strtn)
     strtn <- round(strtn)
     strtn[strtn<0] <- 0
-    names(strtn[2]) <- "phenolics"
-    names(strtn[5]) <- "aliph"
+    names(strtn)[2] <- "phenolics"
+    names(strtn)[5] <- "aliph"
     return(strtn)
   }
   grouping <- function (tn){
