@@ -4,24 +4,24 @@
 \alias{ps_spec}
 \title{Pseudospectra extraction for MSe data analysis with metfRag}
 \usage{
-ps_spec(tni, peakTable, peaklist)
+ps_spec(tni, peakTable = NULL, xsaFA = NULL)
 }
 \arguments{
 \item{tni}{the list of grouped features obtained from the function apply.model}
 
 \item{peakTable}{the peakTable obtained from the runLC function from metaMS}
 
-\item{peaklist}{a peaklist object obtain from the function getpeaklist from CAMERA}
+\item{xsaFA}{the xsaFA object obtained from CAMERA}
 }
 \value{
-"ps_spectra: all the pseudospectra per each group of feature from the list tni"
+ps_spectra all the pseudospectra per each group of feature from the list tni
 }
 \description{
 The function extracts all the pseudospectra given by the CAMERA grouping, which also have at least one isotopic group in the grouped isotopic pattern given by the apply.model function
 }
 \examples{
-data("PeakTable")
-tni <- apply.model(peakTable, polarity = "negative")
+data("peakTable")
+tni <- CCC.peakTable(peakTable, polarity = "negative")
 ps_spectra <- ps_spec(tni, peakTable)
 }
 \author{
