@@ -18,6 +18,7 @@ First install dependencies from CRAN
 install.packages("devtools")
 install.packages("stringr")
 install.packages("rcdk")
+install.packages("rinchi")
 install.packages("ppls")
 install.packages("glmnet")
 ```
