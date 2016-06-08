@@ -1,9 +1,15 @@
 # CCC method
-The package uses the principles of the Compound Characteristics Comparison method to reorder candidate structures given by the in-silico fragmenter MetFrag and returns the best candidates. To perform the analysis with your own data, you need to follow the instructions in the order reported here.
-#### First step: 
-Build the standard dataset: The dataset.building function transforms a dataset of standards into a dataset readable by the CCC_method. the original dataset must contain the compound name, the molecular formula, the monoisotopic mass, the retention time and the smiles code. NB: If you use the dataset given by the package, you can jump this step.
-#### Second step:
-Test the dataset: you need to test the your dataset to see if it is appropriate for the method. The model.testing function performs standard test and gives the results in a easy readable data.frame. Jump this step if you use the dataset given in the package (which is already validated)
+The package uses the principles of the Compound Characteristics Comparison method to rank candidate structures given by the in-silico fragmenter MetFrag and returns the best candidates. Multiple function are available inside the package: 
+1) It is possoble to create your own CCC models, to test them and to use them in your predictions. 
+2) It is possible to use the native CCC method predictions to obtain your best candidates from the in-silico fragmentation simulator MetFrag.
+
+#### 1) Building your own standards' dataset
+The dataset.building function transforms a dataset of standards into a dataset readable by the CCC_method. the original dataset must contain the compound name, the molecular formula, the monoisotopic mass, the retention time and the smiles code.
+#### 1) Build your own CCC models
+The function model.building gives you all the tools to build a similar model to the CCC method one using your own standards dataset. 
+#### 1) Test your own CCC models
+Once you create your own models you can confirm their predictivity using the model.testing function. Loading the dataset built with the dataset.building function, it will evaluate the perfomance of your models.
+
 #### Third step:
 Get your predictions: The function apply.model uses the xsaFA object from CAMERA package, clusters the m/z according to their isotopic pattern, measures their isotopic ratio and gives the most probable amount of carbon atoms in the formula. From this informations, it gives the CCC_method features.
 #### Fourth step:
