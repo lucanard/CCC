@@ -19,7 +19,7 @@ The function ps_spec gives the pseudospectra related to the clusterTable cluster
 #### Rerank the metFrag candidates 
 Get the best candidates: The functions rerank2010, rerank2016 use the clustertable features to rerank the candidate structures given by MetFrag2010 or MetfragBeta (2016). The functions do exactly the same, but one can be used with csv and sdf files on the 2010 metFrag files, while the other one only with the csv files of the MetFragBeta version (2016). 
 
-![Sample image](https://github.com/lucanard/CCC/blob/master/CCC%20flowchart%20-%20Standard.png "CCC workflow")
+![Sample image](CCC/CCC flowchart - Standard (1).png "CCC workflow")
 
 # Installation
 First install dependencies from CRAN
