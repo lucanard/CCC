@@ -5,16 +5,15 @@
 #' @param ny the Y dependent variable under evaluation 
 #' @param model the statistical model to apply: choose between "pls", "lasso", "ridge", "logistic"  
 #' @param errori the kind of error you want to test on the dataset. Choose between "ppms", (mass accuracy error) "Cees" (Carbon estimation error), and "nerr" (normal distributed error) 
-#' @param per.test if TRUE it performs permutation test on the Y value, to determine the random level of relationship between X and Y. default is FALSE 
-#' @usage model.testing(X1Y, ntest, ny, model, errori, per.test = FALSE)
+#' @usage model.testing(X1Y, ntest, ny, model, errori)
 #' @author Luca Narduzzi "nardluca@gmail.com"
 #' @return a list containing the values of the accuracy of the model across the error values. The accuracy is given with 3 parameters: the means_All (percentage of correct predictions) sds_All (percentage of standard deviation) and the RMSE (root mean squared error). It returns also a plot of the test, indicating the accuracy mean across the measurement error.
 #' @export "model.testing"
 #' @examples 
-#' STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = F)
+#' STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = FALSE)
 #' X1Y <- dataset.building(STD_RP)
-#' results <- model.testing(X1Y, ntest=1000, ny=1, model = "logistic", errori = "nerr", per.test = F)
-model.testing <- function(X1Y, ntest, ny, model, errori, per.test = FALSE) {
+#' results <- model.testing(X1Y, ntest=1000, ny=1, model = "logistic", errori = "nerr")
+model.testing <- function(X1Y, ntest, ny, model, errori) {
   train <- lapply(seq(1,ntest), function(x) sample(1:nrow(X1Y), 30))
   X <- lapply(train, function(x) X1Y[-x,10:18])
   X1 <- lapply(train, function(x) X1Y[x,10:18])
@@ -27,8 +26,8 @@ model.testing <- function(X1Y, ntest, ny, model, errori, per.test = FALSE) {
   if (errori == "ppms") {error <- ppms}
   if (errori == "Cees") {error <- Cees}
   if (errori == "nerr") {error <- vector(length=length(ppms))}
+  if (errori == "none") {error <- vector(length = 1)}
   XXX <- list(length = error)
-  Ytest <- permutize(Ytest, per.test)
   X <- lapply(X, function(x) as.matrix(x))
   Y <- lapply(Y, function(x) as.numeric(x))
   Ytest <- lapply(Ytest, function(x) as.numeric(x))
@@ -37,42 +36,47 @@ model.testing <- function(X1Y, ntest, ny, model, errori, per.test = FALSE) {
   if (model == "ridge") {
     lambda <- best.lambda(X1Y, ny=ny, alpha = 0)}
   if (model == "pls") {
-    pena <- penalized.pls.cv(as.matrix(X1Y[,10:18]), as.numeric(X1Y[,ny]), lambda = lambda, k=10, scale = T)
+    pena <- ppls::penalized.pls.cv(as.matrix(X1Y[,10:18]), as.numeric(X1Y[,ny]), lambda = lambda, k=10, scale = T)
     lambda <- pena$lambda.opt
     ncomp <- pena$ncomp.opt
   }
   if (model == "b_ppls") {
-    pena <- ppls.splines.cv(as.matrix(X1Y[,10:18]), as.numeric(X1Y[,ny]), lambda = lambda, k=10, scale = T, reduce.knots= TRUE)
+    pena <- ppls::ppls.splines.cv(as.matrix(X1Y[,10:18]), as.numeric(X1Y[,ny]), lambda = lambda, k=10, scale = T, reduce.knots= TRUE)
     lambda <- pena$lambda.opt
     ncomp <- pena$ncomp.opt
   }
+  rms1 <- vector(mode = "numeric", length = length(errori))
+  means_allA1 <- vector(mode = "numeric", length = length(errori))
+  sds_allA1 <- vector(mode = "numeric", length = length(errori))
   rms <- vector(mode = "numeric", length = length(errori))
   means_allA <- vector(mode = "numeric", length = length(errori))
   sds_allA <- vector(mode = "numeric", length = length(errori))
   for (i2 in 1:length(error)) {
-    XX1 <- errorize(XX, errori, i2)
+    if (errori != "none") {XX1 <- errorize(XX, errori, i2)} else {XX1 <- XX}
     XX11 <- split(as.data.frame(XX1), rep(1:ntest, each=30))
     XXX <- lapply(XX11, function(x) as.matrix(x))
     rmses <- vector(mode = "numeric", length = ntest)
     resA <- vector(mode = "numeric", length = ntest)
+    rmses1 <- vector(mode = "numeric", length = ntest)
+    resA1 <- vector(mode = "numeric", length = ntest)
     for (i in 1:ntest) {
       if (model == "pls") {
-        model.obje <- penalized.pls.cv(as.matrix(X[[i]]), as.numeric(Y[[i]]), lambda = lambda, ncomp = ncomp, k=10)
-        testi <- new.penalized.pls(model.obje, as.matrix(XXX[[i]]))
+        model.obje <- ppls::penalized.pls.cv(as.matrix(X[[i]]), as.numeric(Y[[i]]), lambda = lambda, ncomp = ncomp, k=10)
+        testi <- ppls::new.penalized.pls(model.obje, as.matrix(XXX[[i]]))
         test <- testi$ypred}
       if (model == "b_ppls") {
-        dummy <- X2s(as.matrix(X[[i]]), as.matrix(XXX[[i]]), reduce.knots = TRUE)
-        P <- Penalty.matrix(m = ncol(dummy$Z))
-        model.obje <- penalized.pls.cv(as.matrix(dummy$Z), P = P, lambda = lambda, as.numeric(Y[[i]]), k=10)
-        testi <- new.penalized.pls(model.obje, as.matrix(dummy$Ztest))
+        dummy <- ppls::X2s(as.matrix(X[[i]]), as.matrix(XXX[[i]]), reduce.knots = TRUE)
+        P <- ppls::Penalty.matrix(m = ncol(dummy$Z))
+        model.obje <- ppls::penalized.pls.cv(as.matrix(dummy$Z), P = P, lambda = lambda, as.numeric(Y[[i]]), k=10)
+        testi <- ppls::new.penalized.pls(model.obje, as.matrix(dummy$Ztest))
         test <- testi$ypred}
       if (model == "lasso") {
-        lasso.md = glmnet(data.matrix(X[[i]]), as.numeric(Y[[i]]), alpha = 1, lambda = lambda)
+        lasso.md = glmnet::glmnet(data.matrix(X[[i]]), as.numeric(Y[[i]]), alpha = 1, lambda = lambda)
         pred = predict(lasso.md, data.matrix(XXX[[i]]))
         test <- round(pred)
       }
       if (model == "ridge") {
-        lasso.md = glmnet(data.matrix(X[[i]]), as.numeric(Y[[i]]), alpha = 0, lambda = lambda)
+        lasso.md = glmnet::glmnet(data.matrix(X[[i]]), as.numeric(Y[[i]]), alpha = 0, lambda = lambda)
         pred = predict(lasso.md, data.matrix(XXX[[i]]))
         test <- round(pred)
       }
@@ -95,21 +99,37 @@ model.testing <- function(X1Y, ntest, ny, model, errori, per.test = FALSE) {
       finres <- result == 0
       finres <- colSums(finres, "TRUE")
       resA[i] <- finres
+      Ytest1 <- permutize(Ytest)
+      rmse1 = sqrt(apply((Ytest1[[i]]-test)^2,2,mean))
+      rmses1[i] <- rmse1
+      result1 <- abs(test-Ytest1[[i]])
+      finres1 <- result1 == 0
+      finres1 <- colSums(finres1, "TRUE")
+      resA1[i] <- finres1
     }
     rms[i2] <- mean(rmses)
     pper.resmeanA <- (mean(resA)/30)*100
     pper.ressdA <- (sd(resA)/30)*100
     means_allA[i2] <- pper.resmeanA
     sds_allA[i2] <- pper.ressdA
+    rms1[i2] <- mean(rmses1)
+    pper.resmeanA <- (mean(resA1)/30)*100
+    pper.ressdA <- (sd(resA1)/30)*100
+    means_allA1[i2] <- pper.resmeanA
+    sds_allA1[i2] <- pper.ressdA
   }
-  result <- cbind(means_allA, sds_allA, rms)
+  result <- cbind(means_allA, sds_allA, rms, means_allA1, sds_allA1, rms1)
   if (errori == "nerr") {err <- seq(1, 11, 1)} else {err <- error}
+  if (errori != "nerr" & errori != "none") {
   correct.values <- means_allA
-  plot(err, correct.values, type="l", ylim=c(0,100), main = names(X1Y[1,][ny]), sub = "accuracy")
+  perm.test <- means_allA1
+  plot(err, correct.values, type="l", ylim=c(min((sapply(perm.test, function(x) min(x)))),100), main = names(X1Y[1,][ny]), sub = "accuracy")
   lines(err, correct.values + sds_allA,lty=2, col = "grey")
   lines(err, correct.values - sds_allA,lty=2, col = "grey")
+  lines(err, perm.test, type = "l", col = "red")
   abline(v=0, h=NULL, col="blue")
   abline(v=-(max(err)*(1/3)), h=NULL, col="green")
   abline(v=(max(err)*(1/3)), h=NULL, col="green")
+  } else {return(result)}
   return(result)
 }

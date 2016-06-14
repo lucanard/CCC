@@ -21,7 +21,7 @@ CCC_code <- function(x) {
   CC <- str_count(x, fixed("CC(C)C"))
   CCC <- str_count(x, fixed("CCCC"))
   aliph <- as.numeric(CbC + CaC + CC + CCC)
-  A <- smiles2sdf(x)
+  A <- ChemmineR::smiles2sdf(x)
   Pyri = "c1ccncc1"
   Pyrr = "c1cc[nH]c1"
   fur = "c1ccoc1"
@@ -29,15 +29,15 @@ CCC_code <- function(x) {
   query <- 'c1ccccc1'
   query1 <- "OCC(O)CO"
   query2 <- "O=CO"
-  sdfset <- smiles2sdf(c(Pyri, Pyrr, fur, ncyc))
+  sdfset <- ChemmineR::smiles2sdf(c(Pyri, Pyrr, fur, ncyc))
   sdfset@ID <- c("Pyri", "Pyrr", "fur", "ncyc")
-  mcs <- fmcsBatch(sdfset, A, al = 0, au = 0, bl= 0, bu = 0, matching.mode = "aromatic", numParallel = 2)
+  mcs <- fmcsR::fmcsBatch(sdfset, A, al = 0, au = 0, bl= 0, bu = 0, matching.mode = "aromatic", numParallel = 2)
   mcs[mcs[,5] < 1] <- 0
   het <- drop(mcs[,5])
-  mols <- tryCatch({sapply(x, parse.smiles)}, error = function (e) {sapply(x, function(x) parse.smiles(x, kekulise = FALSE))})
-  does2 <- matches(query2, mols, return.matches = FALSE)
-  does <- matches(query, mols, return.matches = TRUE)
-  does1 <- matches(query1, mols, return.matches = FALSE)
+  mols <- tryCatch({sapply(x, rcdk::parse.smiles)}, error = function (e) {sapply(x, function(x) rcdk::parse.smiles(x, kekulise = FALSE))})
+  does2 <- rcdk::matches(query2, mols, return.matches = FALSE)
+  does <- rcdk::matches(query, mols, return.matches = TRUE)
+  does1 <- rcdk::matches(query1, mols, return.matches = FALSE)
   acidic <- as.numeric(does2 + 0)
   bs <- as.numeric(does1 + 0)
   phenolics <- as.numeric(mat(does))

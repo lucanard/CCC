@@ -1,6 +1,4 @@
-permutize <- function (x, per.test = FALSE){
-  if (per.test != FALSE){
-    x <- lapply(x, function(x) x[sample(length(x))])
-  } else {x <- x}
+permutize <- function (x){
+  x <- lapply(x, function(x) x[sample(length(x))])
   return(x)
 }

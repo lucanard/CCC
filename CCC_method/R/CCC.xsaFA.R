@@ -8,7 +8,7 @@
 #' @author Luca Narduzzi "nardluca@gmail.com"
 #' @examples 
 #' #do not run: try only with your own xsaFA object, it requires xcms and CAMERA
-#' tni <- CCC.xsaFA(xsaFA)
+#' #tni <- CCC.xsaFA(xsaFA)
 CCC.xsaFA <- function(xsaFA, models = NULL) {
 getIsoGroups=function(xsaFA){
   iso_groups=list()
@@ -171,7 +171,7 @@ querying <- function(tn, intval = "into"){
 }
 if (str_detect(xsaFA@xcmsSet@filepaths[[1]], coll("neg")) == TRUE) {
   xsaFA@polarity <- "negative"} else {xsaFA@polarity <- "positive"}
-peaklist <- getPeaklist(xsaFA, intval='into')
+peaklist <- CAMERA::getPeaklist(xsaFA, intval='into')
 isogroups <- getIsoGroups(xsaFA)
 ratios <- rating(xsaFA, intval="into")
 tn <- mapply(c, as.matrix(ratios), SIMPLIFY = "FALSE")

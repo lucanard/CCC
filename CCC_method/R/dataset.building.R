@@ -6,10 +6,10 @@
 #' @export "dataset.building"
 #' @author Luca Narduzzi "nardluca@gmail.com"
 #' @examples 
-#' STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = F)
+#' STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = FALSE)
 #' X1Y <- dataset.building(STD_RP)
 dataset.building <- function(x) {
-  STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = F)
+  STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = FALSE)
   if (identical(colnames(STD_RP), colnames(x)) == FALSE) {stop("please check the colnames of your data.matrix. The colnames must correspond to the ones in the STD_RP data.frame furnished within the package")}
   options(warnings = F)
   is.odd <- function(x) x %% 2 != 0

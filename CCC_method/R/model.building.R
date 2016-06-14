@@ -8,7 +8,7 @@
 #' @export "model.building"
 #' @author Luca Narduzzi "nardluca@gmail.com"
 #' @examples 
-#' STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = F)
+#' STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = FALSE)
 #' X1Y <- dataset.building(STD_RP)
 #' models <- model.building(X1Y)
 model.building <- function(X1Y, ny = c(1,3,4,5,7,8,9), models = NULL) {
