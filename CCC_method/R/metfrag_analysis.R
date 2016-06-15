@@ -38,10 +38,10 @@ for (i in 1:length(groups)) {
     if (length(name) >= n_candidates) {name <- name[1:n_candidates]} else {name <- name[1:max(length(name))]}
     queries <- data.frame(name, thr)
     if (any(as.logical(name)) %in% sorts[mark,"rowname"]) {queries <- queries} else {thr1 <- sorts[mark, "mzs"]
-    name1 <- sorts[mark,"rowname"]
+    name1 <- as.character(sorts[mark,"rowname"])
     queries1 <- data.frame(name1, thr1)
     names(queries1) <- c("name", "thr")
-    queries <- rbind(queries, queries1)
+    queries <- unique(rbind(queries, queries1))
     }
     for (i2 in 1:nrow(queries)) {
     peaklist <- as.matrix(ps_spectra[which(ps_spectra$gro == groups[i]), -3])
