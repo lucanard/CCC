@@ -4,10 +4,8 @@ CCC_code <- function(x) {
     phe <- character(length=length(x))
     for (i in 1:length(x))
       if (x[[i]][1][[1]] == TRUE)
-      {phe[i] <- length(x[[i]][2][[1]])}
-    else
-    {phe[i] <- 0 }
-    phe}
+      {phe[i] <- length(x[[i]][2][[1]])} else {phe[i] <- 0}
+    return(phe)}
   sulfur <- str_detect(x, pattern="[Ss]") + 0
   Carbon <- str_count(x, pattern="[Cc]") + 0
   Oxygen <- str_count(x, pattern="[Oo]") + 0
@@ -31,7 +29,7 @@ CCC_code <- function(x) {
   query2 <- "O=CO"
   sdfset <- ChemmineR::smiles2sdf(c(Pyri, Pyrr, fur, ncyc))
   sdfset@ID <- c("Pyri", "Pyrr", "fur", "ncyc")
-  mcs <- fmcsR::fmcsBatch(sdfset, A, al = 0, au = 0, bl= 0, bu = 0, matching.mode = "aromatic", numParallel = 2)
+  mcs <- fmcsR::fmcsBatch(sdfset, A, al = 0, au = 0, bl= 0, bu = 0, matching.mode = "aromatic", numParallel = as.numeric(parallel::detectCores()))
   mcs[mcs[,5] < 1] <- 0
   het <- drop(mcs[,5])
   mols <- tryCatch({sapply(x, rcdk::parse.smiles)}, error = function (e) {sapply(x, function(x) rcdk::parse.smiles(x, kekulise = FALSE))})

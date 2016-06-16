@@ -2,13 +2,14 @@
 #' @description The function handles MSe data to obtain MS/MS analysis through the metfRag package and to reorder the molecules according to the CCC method calculations. It directly queries the the 4 most intense ions of a pseudospectra in metfRag, discards imporbabloe structures according to some heuristic rules, then reranks the obtained candidates using the Y variables extrapolated in the reduced peakTable tni.
 #' @param tni the reduced peakTable given by the CCC.peaktable or CCC.xsaFA functions
 #' @param ps_spectra the pseudospectra given by the ps_spec function
-#' @param threshold the threshold used to discard low intense MS/MS markers
+#' @param excl_int the percentage threshold used to discard low intense MS/MS markers
 #' @param markers a list of markers given from your own statistical analysis. If NULL, all the first most intense ion of each speudospectra are analyzed; WARNING = data file must be massive and it might lead to errors.
 #' @param pre_filter if TRUE, it uses the features measured by the CCC method to pre-filter candidates before performing in-silico fragmentation. It speeds up the process, but it is error-prone. default is set to FALSE
 #' @param database the database to use to fetch candidate structures with no default. Please choose between "PubChem", "ExtendedPubChem", "ChemSpider" (it requires Chemspider token), "KEGG".
 #' @param token your personal ChemSpider token
+#' @param ppm_error the mass measurement error
 #' @param n_candidates the number of candidates parent ions to be considered fro MS/MS analysis from the same spectrum. 
-#' @usage metfragging(tni, ps_spectra, threshold, markers, pre_filter, n_candidates, database, token)
+#' @usage metfragging(tni, ps_spectra, threshold, markers, pre_filter, n_candidates, database, token, ppm_error)
 #' @return a list of data.frames containing the outcome of metfRag reordered according to the CCC method
 #' @export "metfragging"
 #' @author Luca Narduzzi "nardluca@gmail.com"
@@ -17,7 +18,7 @@
 #' tni <- CCC.peakTable(peakTable, polarity = "negative")
 #' ps_spectra <- ps_spec(tni, peakTable)
 #' results <- metfragging(tni, ps_spectra, markers = 2713, database = "KEGG")
-metfragging <- function(tni, ps_spectra, threshold = 1000, markers = NULL, pre_filter = FALSE, n_candidates = 2, database, token = NULL) {
+metfragging <- function(tni, ps_spectra, excl_int = 5, markers = NULL, pre_filter = FALSE, n_candidates = 2, database, token = NULL, ppm_error = 10.0) {
   if (missing(tni) == TRUE) {stop("please insert reduced peakTable")}
   if (missing(ps_spectra) == TRUE) {stop("please insert pseudo-spectras")}
   if (missing(database) == TRUE) {stop("please insert the database to fetch the structures")}
@@ -45,6 +46,7 @@ for (i in 1:length(groups)) {
     }
     for (i2 in 1:nrow(queries)) {
     peaklist <- as.matrix(ps_spectra[which(ps_spectra$gro == groups[i]), -3])
+    inti <- as.numeric(ps_spectra[which(row.names(ps_spectra) == queries [i2, "name"]), "int"]/100 * excl_int)
     if (pre_filter == TRUE) {SMARTS <- code_CCC(sorts[i2,10:16])
       filters <- "SmartsSubstructureInclusionScore"
       met_score <- c(1.0, 1.0)} else {SMARTS <- NULL
@@ -66,10 +68,10 @@ for (i in 1:length(groups)) {
     limitup <- str_c(c("C", maxnC, "H", maxnH, "N", maxnN, "O",maxnO, "P", maxnP, "S", maxnS), collapse = "")
     limitdown <- str_c(c("C", minnC, "H", minnH, "N",minnN, "O", minnO, "P", minnP, "S", minnS), collapse = "")
     settingsObject<-list()
-    settingsObject[["DatabaseSearchRelativeMassDeviation"]] <- 10.0
+    settingsObject[["DatabaseSearchRelativeMassDeviation"]] <- ppm_error
     settingsObject[["FragmentPeakMatchAbsoluteMassDeviation"]] <- 0.01
     settingsObject[["FragmentPeakMatchRelativeMassDeviation"]]<-10.0
-    settingsObject[["MinimumAbsolutePeakIntensity"]] <- threshold
+    settingsObject[["MinimumAbsolutePeakIntensity"]] <- inti
     settingsObject[["NumberThreads"]] <- as.numeric(parallel::detectCores())
     settingsObject[["MetFragDatabaseType"]] <- database
     settingsObject[["MetFragPreProcessingCandidateFilter"]] <- c("UnconnectedCompoundFilter","IsotopeFilter", "MinimumElementsFilter", "MaximumElementsFilter", "ElementExclusionFilter")  
