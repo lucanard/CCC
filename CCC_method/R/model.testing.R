@@ -32,19 +32,21 @@ model.testing <- function(X1Y, ntest, ny, model, errori) {
   Y <- lapply(Y, function(x) as.numeric(x))
   Ytest <- lapply(Ytest, function(x) as.numeric(x))
   if (model == "lasso") {
-    lambda <- best.lambda(X1Y, ny=ny, alpha = 1)}
+    lambda <- best.lambda(X1Y, ny=ny, alpha = 1)
+    }
   if (model == "ridge") {
-    lambda <- best.lambda(X1Y, ny=ny, alpha = 0)}
+    lambda <- best.lambda(X1Y, ny=ny, alpha = 0)
+    }
   if (model == "pls") {
     pena <- ppls::penalized.pls.cv(as.matrix(X1Y[,10:18]), as.numeric(X1Y[,ny]), lambda = lambda, k=10, scale = T)
     lambda <- pena$lambda.opt
     ncomp <- pena$ncomp.opt
-  }
+    }
   if (model == "b_ppls") {
     pena <- ppls::ppls.splines.cv(as.matrix(X1Y[,10:18]), as.numeric(X1Y[,ny]), lambda = lambda, k=10, scale = T, reduce.knots= TRUE)
     lambda <- pena$lambda.opt
     ncomp <- pena$ncomp.opt
-  }
+    }
   rms1 <- vector(mode = "numeric", length = length(errori))
   means_allA1 <- vector(mode = "numeric", length = length(errori))
   sds_allA1 <- vector(mode = "numeric", length = length(errori))
@@ -63,23 +65,25 @@ model.testing <- function(X1Y, ntest, ny, model, errori) {
       if (model == "pls") {
         model.obje <- ppls::penalized.pls.cv(as.matrix(X[[i]]), as.numeric(Y[[i]]), lambda = lambda, ncomp = ncomp, k=10)
         testi <- ppls::new.penalized.pls(model.obje, as.matrix(XXX[[i]]))
-        test <- testi$ypred}
+        test <- testi$ypred
+        }
       if (model == "b_ppls") {
         dummy <- ppls::X2s(as.matrix(X[[i]]), as.matrix(XXX[[i]]), reduce.knots = TRUE)
         P <- ppls::Penalty.matrix(m = ncol(dummy$Z))
         model.obje <- ppls::penalized.pls.cv(as.matrix(dummy$Z), P = P, lambda = lambda, as.numeric(Y[[i]]), k=10)
         testi <- ppls::new.penalized.pls(model.obje, as.matrix(dummy$Ztest))
-        test <- testi$ypred}
+        test <- testi$ypred
+        }
       if (model == "lasso") {
         lasso.md = glmnet::glmnet(data.matrix(X[[i]]), as.numeric(Y[[i]]), alpha = 1, lambda = lambda)
         pred = predict(lasso.md, data.matrix(XXX[[i]]))
         test <- round(pred)
-      }
+        }
       if (model == "ridge") {
         lasso.md = glmnet::glmnet(data.matrix(X[[i]]), as.numeric(Y[[i]]), alpha = 0, lambda = lambda)
         pred = predict(lasso.md, data.matrix(XXX[[i]]))
         test <- round(pred)
-      }
+        }
       if (model == "logistic"){
         Xa <- as.data.frame(X[[i]])
         YY <- Y[[i]]
@@ -89,7 +93,7 @@ model.testing <- function(X1Y, ntest, ny, model, errori) {
         Xa <- as.data.frame(XXX[[i]])
         pred = predict(bin.model, Xa, type="response")
         test <- round(pred)
-      }
+        }
       test <- round(test)
       test[test < 0] <- 0
       test <- as.matrix(test)

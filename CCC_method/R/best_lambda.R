@@ -9,7 +9,7 @@ best.lambda <- function(X1Y, ny, alpha) {
     lam.best[i] <- drop(lam.bes)
     lam.best[which(is.nan(lam.best))] <- 0
     }
-  best <- mean(lam.best)
+  best <- median(lam.best)
   if (best <= 0) {best = 0}
   return(best)
 }
