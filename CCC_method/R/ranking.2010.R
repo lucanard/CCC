@@ -11,19 +11,23 @@
 #' data (peakTable)
 #' tni <- CCC.peakTable(peakTable, polarity = "negative")
 #' candidates <- ranking.2010(system.file("extdata", "2010", package = "CCC"), tni)
-ranking.2010 <- function(directory, tni, sep = ",") {
+ranking.2010 <- function(directory, tni, sep) {
   setwd(directory)
+  if (all(str_detect(file, pattern = "csv") != TRUE) & all(str_detect(file, pattern = "sdf") != TRUE)) {
+    stop("csv/sdf files are missing: please control the directory")
+  }
   compi <- do.call(rbind, tni)
   row.names(compi) <- compi$rowname
   file <- list.files(path = ".", full.names = FALSE)
-  if (str_detect(file, pattern = "csv") == TRUE) {
+  if (any(str_detect(file, pattern = "csv") == TRUE)) {
   fi <- str_detect(file, pattern = "csv")  
   fil <- str_replace(file[fi], pattern = ".csv", replacement="")
   fil <- as.numeric(fil)
   candidate <- list()
   for (i in 1:length(fil)) {
     print(fil[i])
-    files <- read.csv(file[fi][i], sep = sep, stringsAsFactors=FALSE)
+    files <- read.csv(file[fi][i], sep = ",", stringsAsFactors=FALSE)
+    if (length(files) == 1) {stop("please select the prope separator for your csv files")}
     name <- files[4,]
     files <- files[5:nrow(files),]
     names(files) <- name
@@ -37,9 +41,8 @@ ranking.2010 <- function(directory, tni, sep = ",") {
     eb <- eb + 1
     reordi <- order(eb)
     correct <- files[reordi,]
-    candidate[[i]] <- correct
-    names(candidate[[i]]) <- names(files)
-  }
+    candidate[[i]] <- list(correct, files)
+    }
   } else {
     fo <- str_detect(file, pattern = "sdf")
     fil <- str_replace(file[fo], pattern = ".sdf", replacement="")
@@ -64,7 +67,7 @@ ranking.2010 <- function(directory, tni, sep = ",") {
       eb <- eb + 1
       reordi <- order(eb)
       correct <- esp[reordi,]
-      candidate[[i]] <- correct
+      candidate[[i]] <- list(correct, esp)
     }
   }
   return(candidate)
