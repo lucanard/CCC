@@ -29,7 +29,7 @@ ranking.2010 <- function(directory, tni, sep) {
   candidate <- list()
   for (i in 1:length(fil)) {
     print(fil[i])
-    files <- read.csv(file[fi][i], sep = ",", stringsAsFactors=FALSE)
+    files <- read.csv(file[fi][i], sep = sep, stringsAsFactors=FALSE)
     if (length(files) == 1) {stop("please select the prope separator for your csv files")}
     name <- files[4,]
     files <- files[5:nrow(files),]
