@@ -16,6 +16,9 @@ ranking.2010 <- function(directory, tni, sep) {
   if (all(str_detect(file, pattern = "csv") != TRUE) & all(str_detect(file, pattern = "sdf") != TRUE)) {
     stop("csv/sdf files are missing: please control the directory")
   }
+  if (any(str_detect(file, pattern = "csv") == TRUE) & any(str_detect(file, pattern = "sdf") == TRUE)) {
+    warning("both csv and sdf files are present in the folder only the former will be used")
+  }
   compi <- do.call(rbind, tni)
   row.names(compi) <- compi$rowname
   file <- list.files(path = ".", full.names = FALSE)
