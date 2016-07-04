@@ -28,7 +28,6 @@ First install dependencies from CRAN
 install.packages("devtools")
 install.packages("stringr")
 install.packages("rcdk")
-install.packages("rinchi")
 install.packages("ppls")
 install.packages("glmnet")
 ```
@@ -45,6 +44,7 @@ Last, install metfRag and the CCC_method from github
 
 ```R
 library(devtools)
+install_github("cdkr", "rajarshi", subdir="rinchi")
 install_github("c-ruttkies/MetFragR/metfRag")
 install_github("lucanard/CCC", subdir="CCC_method")
 ```
