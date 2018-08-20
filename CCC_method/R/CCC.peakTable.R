@@ -1,16 +1,16 @@
-#' @title Application of the CCC method on the real data 
+#' @title Application of the CCC method on the real data
 #' @description the function uses the peakTable given by metaMS to group the isotopic patterns and it uses this data to give an estimation of their amount of Carbons and predicts the CCC Y dependent variables on each of the isotopic pattern. It can also handle statistical models built on different standards dataset using the function model.building.
 #' @param peakTable the peakTable obtained from the runLC function of the metaMS package
 #' @param polarity the polarity of the MS experiment
-#' @param models the statistical models to use in the CCC_method. Default is NULL, so the original models are loaded and applied. Elsewhere, own models can be applied , building them using the function "model.building".   
+#' @param models the statistical models to use in the CCC_method. Default is NULL, so the original models are loaded and applied. Elsewhere, own models can be applied , building them using the function "model.building".
 #' @usage CCC.peakTable(peakTable, polarity, models = NULL)
 #' @return a list of grouped features with their isotopic pattern, estimated amount of Carbon and the CCC method predictions.
 #' @export "CCC.peakTable"
 #' @author Luca Narduzzi "nardluca@gmail.com"
-#' @examples 
+#' @examples
 #' data(peakTable)
 #' tni <- CCC.peakTable(peakTable, polarity = "negative")
-#' #' 
+#' #'
 CCC.peakTable <- function(peakTable, polarity, models = NULL) {
   if (is.null(peakTable)) {stop("insert peakTable to use the CCC method")}
   if (is.null(polarity)) {stop("please insert the polarity of the experiment")}
@@ -94,6 +94,9 @@ CCC.peakTable <- function(peakTable, polarity, models = NULL) {
       mass <- as.numeric(tn$mzs)
       nC <- as.numeric(tn$estC)
       nm <- round(mass)
+      maxC <- round(nm/12)
+      wC <- which(nC - maxC >= 0)
+      nC[wC] <- maxC[wC] - 1
       md <- (mass-nm)
       RMD <- (md/nm*1000000)
       mC <- (as.numeric(nC*12))
@@ -103,7 +106,7 @@ CCC.peakTable <- function(peakTable, polarity, models = NULL) {
       rmd <- rmass-rnm
       rRMD <- rmd/rnm*1000000
       is.odd <- function(x) x %% 2 != 0
-      odd <- is.odd(nm)
+      odd <- is.odd(round(mass))
       odd <- odd + 0
       IMDP <- function(tn){
         IMDPs <- vector(length=nrow(tn))
@@ -119,6 +122,8 @@ CCC.peakTable <- function(peakTable, polarity, models = NULL) {
       pX <- data.frame(RT, mass, nC, md, RMD, pC, rRMD, odd, Sulfur)
       if (is.null(models)) {
       load(system.file("extdata", "bin.model.acid.rda", package = "CCC"))
+      load(system.file("extdata","b_pPLS.md.CO.rda", package ="CCC"))
+      load(system.file("extdata","b_pPLS.md.aliph.rda", package ="CCC"))
       load(system.file("extdata","bin.model.NN.rda", package ="CCC"))
       load(system.file("extdata","bin.model.SS.rda", package ="CCC"))
       load(system.file("extdata","bin.model.bs.rda", package ="CCC"))
@@ -137,21 +142,31 @@ CCC.peakTable <- function(peakTable, polarity, models = NULL) {
         pls.md.phenolics <- models[[3]]
       }
       SS <- predict(bin.model.SS, pX, type="response")
-      acid <- predict(bin.model.acid, pX, type="response")
+      #acid <- predict(bin.model.acid, pX, type="response")
       NN <- predict(bin.model.NN, pX, type="response")
-      CO <- predict(bin.model.CO, pX, type="response")
+      ppX <- as.matrix(pX)
+      dai <- ppls::X2s(ppX, reduce.knots = TRUE)
+      CO <- ppls::new.penalized.pls(b_pPLS.md.CO, dai$Z)
+      CO <- CO$ypred
+      #CO <- predict(bin.model.CO, pX, type="response")
       bs <- predict(bin.model.bs, pX, type="response")
-      phenolic <- new.penalized.pls(pls.md.phenolics, as.matrix(pX))
+      phenolic <- ppls::new.penalized.pls(pls.md.phenolics, as.matrix(pX))
       phenolics <- phenolic$ypred
       names(phenolics) <- phenolics
-      aliph <- predict(lasso.md.aliph, as.matrix(pX))
-      strtn <- cbind(SS, phenolics, acid, NN, aliph, CO, bs)
-      names(strtn) <- c("SS", "phenolics", "acid", "NN", "aliph", "CO", "bs")
+      aliph <- ppls::new.penalized.pls(b_pPLS.md.aliph, dai$Z)
+      aliph <- aliph$ypred
+      #aliph <- predict(lasso.md.aliph, as.matrix(pX))
+      strtn <- cbind(SS, phenolics, NN, aliph, CO, bs)
+      names(strtn) <- c("SS", "phenolics", "NN", "aliph", "CO", "bs")
       strtn <- as.data.frame(strtn)
       strtn <- round(strtn)
       strtn[strtn<0] <- 0
+      names(strtn)[1] <- "Sulfur"
       names(strtn)[2] <- "phenolics"
-      names(strtn)[5] <- "aliph"
+      names(strtn)[3] <- "Nitrogen (NN)"
+      names(strtn)[4] <- "aliph"
+      names(strtn)[5] <- "CO ratio"
+      names(strtn)[6] <- "Glycosides (bs)"
       return(strtn)
     }
     grouping <- function (tn){

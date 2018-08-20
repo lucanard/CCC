@@ -120,6 +120,8 @@ querying <- function(tn, intval = "into"){
     pX <- data.frame(RT, mass, nC, md, RMD, pC, rRMD, odd, Sulfur)
     if (is.null(models)) {
       load(system.file("extdata", "bin.model.acid.rda", package = "CCC"))
+      load(system.file("extdata","b_pPLS.md.CO.rda", package ="CCC"))
+      load(system.file("extdata","b_pPLS.md.aliph.rda", package ="CCC"))  
       load(system.file("extdata","bin.model.NN.rda", package ="CCC"))
       load(system.file("extdata","bin.model.SS.rda", package ="CCC"))
       load(system.file("extdata","bin.model.bs.rda", package ="CCC"))
@@ -138,21 +140,31 @@ querying <- function(tn, intval = "into"){
       pls.md.phenolics <- models[[3]]
     }
     SS <- predict(bin.model.SS, pX, type="response")
-    acid <- predict(bin.model.acid, pX, type="response")
+    #acid <- predict(bin.model.acid, pX, type="response")
     NN <- predict(bin.model.NN, pX, type="response")
-    CO <- predict(bin.model.CO, pX, type="response")
+    ppX <- as.matrix(pX)
+    dai <- ppls::X2s(ppX, reduce.knots = TRUE)
+    CO <- ppls::new.penalized.pls(b_pPLS.md.CO, dai$Z)
+    CO <- CO$ypred
+    #CO <- predict(bin.model.CO, pX, type="response")
     bs <- predict(bin.model.bs, pX, type="response")
-    phenolic <- new.penalized.pls(pls.md.phenolics, as.matrix(pX))
+    phenolic <- ppls::new.penalized.pls(pls.md.phenolics, as.matrix(pX))
     phenolics <- phenolic$ypred
     names(phenolics) <- phenolics
-    aliph <- predict(lasso.md.aliph, as.matrix(pX))
-    strtn <- cbind(SS, phenolics, acid, NN, aliph, CO, bs)
-    names(strtn) <- c("SS", "phenolics", "acid", "NN", "aliph", "CO", "bs")
+    aliph <- ppls::new.penalized.pls(b_pPLS.md.aliph, dai$Z)
+    aliph <- aliph$ypred
+    #aliph <- predict(lasso.md.aliph, as.matrix(pX))
+    strtn <- cbind(SS, phenolics, NN, aliph, CO, bs)
+    names(strtn) <- c("SS", "phenolics", "NN", "aliph", "CO", "bs")
     strtn <- as.data.frame(strtn)
     strtn <- round(strtn)
     strtn[strtn<0] <- 0
+    names(strtn)[1] <- "Sulfur"
     names(strtn)[2] <- "phenolics"
-    names(strtn)[5] <- "aliph"
+    names(strtn)[3] <- "Nitrogen (NN)"
+    names(strtn)[4] <- "aliph"
+    names(strtn)[5] <- "CO ratio"
+    names(strtn)[6] <- "Glycosides (bs)"
     return(strtn)
   }
   grouping <- function (tn){

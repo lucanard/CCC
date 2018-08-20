@@ -12,7 +12,7 @@
 #' @examples 
 #' STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = FALSE)
 #' X1Y <- dataset.building(STD_RP)
-#' results <- test.model(X1Y, model = "lasso", variables, ntest = 100, errors = "ppm")
+#' results <- test.model(X1Y, model = "lasso", variables = "categorical", ntest = 100, errors = "ppm")
 
 test.model <- function(X1Y, model, variables, ntest = 100, errors) {
   if (variables != "categorical" & variables != "ordinal") {stop("please indicate the type of variables to test between categorical and ordinal")}

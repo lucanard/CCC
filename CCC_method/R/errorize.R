@@ -3,7 +3,7 @@ errorize <- function (x, errori, i2) {
   Cees <- c(-5,-4,-3,-2,-1,0,1,2,3,4,5)
   X2 <- data.frame()
   Xm <- x
-  if (errori == "ppms") {
+  if (errori == "ppm") {
     x[,2] <- (x[,2]+(x[,2]/1000000*ppms[i2]))
     x[,4] <- (x[,2] - round(x[,2]))
     x[,5] <- ((x[,4]/x[,2])*1000000)

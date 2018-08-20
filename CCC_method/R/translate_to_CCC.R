@@ -33,12 +33,12 @@ CCC_code <- function(x) {
   mcs[mcs[,5] < 1] <- 0
   het <- drop(mcs[,5])
   mols <- tryCatch({sapply(x, rcdk::parse.smiles)}, error = function (e) {sapply(x, function(x) rcdk::parse.smiles(x, kekulise = FALSE))})
-  does2 <- rcdk::matches(query2, mols, return.matches = FALSE)
+  #does2 <- rcdk::matches(query2, mols, return.matches = FALSE)
   does <- rcdk::matches(query, mols, return.matches = TRUE)
   does1 <- rcdk::matches(query1, mols, return.matches = FALSE)
-  acidic <- as.numeric(does2 + 0)
+  #acidic <- as.numeric(does2 + 0)
   bs <- as.numeric(does1 + 0)
   phenolics <- as.numeric(mat(does))
-  Y <- cbind(sulfur, phenolics, acidic, NN, aliph, CO, bs)
+  Y <- cbind(sulfur, phenolics, NN, aliph, CO, bs)
   return(Y)
 }

@@ -22,22 +22,22 @@ ranking.2016 <- function(directory, tni, sep = ",") {
   candidate <- list()
   for (i in 1:length(fil)) {
     print(fil[i])
-    files <- read.csv(file[fi][i], stringsAsFactors=FALSE, sep = sep)
+    files <- read.csv(file[fi][i], sep = sep, stringsAsFactors=FALSE)
     max.peaks <- as.numeric(max(files$NoExplPeaks))
     files <- files[as.numeric(files$NoExplPeaks) >= max.peaks/10,]
     es <- parse.inchi(files$InChI)
     esi <- sapply(es, function(x) length(x))
     es <- es[esi != 0]
-    esi <- sapply(es, function(x) get.smiles(x))
-    com <- CCC_code(esi)
+    essi <- sapply(es, function(x) get.smiles(x))
+    filies <- cbind(files[esi != 0,], essi)
+    com <- CCC_code(essi)
     predicted <- compi[compi$rowname == fil[i], 10:16]
     ebb <- apply(com, 1, '-', as.numeric(predicted))
     eb <- colSums(abs(ebb))
     eb <- eb + 1
     reordi <- order(eb)
-    correct <- files[reordi,]
-    candidate[[i]] <- correct
-    names(candidate[[i]]) <- names(files)
-  }
+    correct <- filies[reordi,]
+    candidate[[i]] <- list(correct, filies)
+    }
   return(candidate)
 }

@@ -11,12 +11,19 @@
 #' STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = FALSE)
 #' X1Y <- dataset.building(STD_RP)
 #' models <- model.building(X1Y)
-model.building <- function(X1Y, ny = c(1,3,4,5,7,8,9), models = NULL) {
+model.building <- function(X1Y, ny = c(1:9), models = NULL) {
+  options(warn=-1)
 modelli <- list(length=length(ny))
 if (is.null(models)) {
 for (i in ny) {
   if (i == 1) {model <- "logistic"
   modelli[[i]] <- building(X1Y, ny = i, model = model)
+  }
+  if (i == 2) {model <- "pls"
+  modelli[[i]] <- building(X1Y, ny = i, model = model)
+  }
+  if (i == 6) {model <- "pls"
+  modelli [[i]] <- building(X1Y, ny = i, model = model)
   }
   if (i == 4) {model <- "logistic"
   modelli[[i]] <- building(X1Y, ny = i, model = model)
@@ -24,7 +31,7 @@ for (i in ny) {
   if (i == 5) {model <- "logistic"
   modelli[[i]] <- building(X1Y, ny = i, model = model)
   }
-  if (i == 8) {model <- "logistic"
+  if (i == 8) {model <- "ridge"
   modelli[[i]] <- building(X1Y, ny = i, model = model)
   }
   if (i == 9) {model <- "logistic"
@@ -39,7 +46,7 @@ for (i in ny) {
   }
 } else {model <- models
 for (i in ny) {
-modelli[[i]] <- building(X1Y, ny = i, model = model)
+modelli[[i]] <- building(X1Y, ny = i, model = model[i])
 }
 }
 return(modelli)
