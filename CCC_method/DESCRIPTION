@@ -1,7 +1,7 @@
 Package: CCC
 Type: Package
 Title: Compounds characteristics comparison for the identification of unknown metabolites
-Version: 0.1
+Version: 0.2
 Date: 2015-11-26
 Author: Luca Narduzzi
 Maintainer: <nardluca@gmail.com>
@@ -15,8 +15,9 @@ Depends:
     glmnet,
     fmcsR,
     rcdk,
+    rinchi,
     ChemmineR,
-    metfRag
+    metfRag,
 License: GPL
 LazyData: TRUE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
