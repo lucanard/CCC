@@ -3,6 +3,9 @@
 #' @param x must be a data.frame containing the compounds' names ("compound"), the monoisotopic mass ("MM"), the retention time ("RT"), the chemical formula ("Formula") and the smiles ("smiles")
 #' @usage dataset.building(x)
 #' @return the basic dataset to build a CCC_method
+#' @import fmcsR
+#' @import rcdk
+#' @import ChemmineR
 #' @export "dataset.building"
 #' @author Luca Narduzzi "nardluca@gmail.com"
 #' @examples 

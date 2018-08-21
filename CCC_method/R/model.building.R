@@ -5,6 +5,8 @@
 #' @param models the statistical model you want to use to build the model. The options inclued logistic ("logistic"), lasso ("lasso"), ridge ("ridge"), pls ("pls"), and penalized-pls ("b_ppls"). The default option builds the models according to the CCC_method.  
 #' @usage model.building(X1Y, ny, models)
 #' @return a list of statistical models to perform the CCC approach 
+#' @import glmnet
+#' @import ppls
 #' @export "model.building"
 #' @author Luca Narduzzi "nardluca@gmail.com"
 #' @examples 

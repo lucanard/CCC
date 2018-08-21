@@ -8,6 +8,9 @@
 #' @usage test.model(X1Y, model, variables, ntest, errors)
 #' @author Luca Narduzzi "nardluca@gmail.com"
 #' @return a list containing the values of the accuracy of the model across the error values. The accuracy is given with 3 parameters: the means_All (percentage of correct predictions) sds_All (percentage of standard deviation) and the MSEE (root mean squared error). It returns also a plot of the test, indicating the accuracy mean across the measurement error.
+#' @import glmnet
+#' @import ppls
+#' @importFrom ROCR performance
 #' @export "test.model"
 #' @examples 
 #' STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = FALSE)

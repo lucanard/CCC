@@ -5,6 +5,7 @@
 #' @param xsaFA the xsaFA object obtained from CAMERA 
 #' @usage ps_spec(tni, peakTable = NULL, xsaFA = NULL)
 #' @return ps_spectra all the pseudospectra per each group of feature from the list tni
+#' @import CAMERA
 #' @export "ps_spec"
 #' @author Luca Narduzzi "nardluca@gmail.com"
 #' @examples 

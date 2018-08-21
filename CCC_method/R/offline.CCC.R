@@ -4,8 +4,8 @@
 #' @param datapath the path to upload a csv files containing the RT, the mz of the main ions and their intensity 
 #' @param polarity the polarity of the experiment
 #' @param models the statisticals models to apply for the prediction. If NULL, old models from previous CCC version will be uploaded
-#'
 #' @return a data.frame containing the predicted value for your specific query 
+#' 
 #' @export "offline.CCC"
 #' @author Luca Narduzzi "nardluca@gmail.com"
 #'
