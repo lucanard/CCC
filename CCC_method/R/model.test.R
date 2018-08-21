@@ -91,7 +91,7 @@ model.test <- function(X1Y, ntest = ntest, model, errors, nyc) {
     }
     resAB <- do.call(rbind, resAA)
     testYB <- do.call(rbind, testY)
-    manypred = prediction(as.numeric(resAB), as.numeric(testYB))
+    manypred = ROCR::prediction(as.numeric(resAB), as.numeric(testYB))
     roc.perf[[i3]] = ROCR::performance(manypred, measure = "tpr", x.measure = "fpr")
     roc.auc[[i3]] = ROCR::performance(manypred, measure = "auc")
   }
