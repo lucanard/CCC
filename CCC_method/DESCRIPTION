@@ -11,6 +11,7 @@ Description: The package is developed to build a CCC_model to predict the
 Depends:
     R (>= 3.0),
     stringr (>= 1.0.0),
+Imports: 
     ppls,
     glmnet,
     fmcsR,
@@ -18,6 +19,7 @@ Depends:
     rinchi,
     ChemmineR,
     metfRag,
+    ROCR,
 License: GPL
 LazyData: TRUE
 RoxygenNote: 6.0.1
