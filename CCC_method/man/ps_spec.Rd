@@ -27,4 +27,3 @@ ps_spectra <- ps_spec(tni, peakTable)
 \author{
 Luca Narduzzi "nardluca@gmail.com"
 }
-

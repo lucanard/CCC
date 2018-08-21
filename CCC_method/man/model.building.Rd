@@ -20,11 +20,10 @@ a list of statistical models to perform the CCC approach
 the function builds the statistical models to predict the Y dependent variables of theCCC_method  from a chemical standards dataset.
 }
 \examples{
-STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = F)
+STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = FALSE)
 X1Y <- dataset.building(STD_RP)
 models <- model.building(X1Y)
 }
 \author{
 Luca Narduzzi "nardluca@gmail.com"
 }
-

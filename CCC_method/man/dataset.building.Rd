@@ -16,10 +16,9 @@ the basic dataset to build a CCC_method
 the function builds the dataset to apply the the CCC_method to an in-house dataset of standards. The new-built must be saved as model
 }
 \examples{
-STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = F)
+STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = FALSE)
 X1Y <- dataset.building(STD_RP)
 }
 \author{
 Luca Narduzzi "nardluca@gmail.com"
 }
-

@@ -22,9 +22,8 @@ the function uses the peakTable given by metaMS to group the isotopic patterns a
 \examples{
 data(peakTable)
 tni <- CCC.peakTable(peakTable, polarity = "negative")
-#' 
+#'
 }
 \author{
 Luca Narduzzi "nardluca@gmail.com"
 }
-

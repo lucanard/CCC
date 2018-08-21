@@ -25,4 +25,3 @@ candidates <- ranking.2010(system.file("extdata", "2010", package = "CCC"), tni)
 \author{
 Luca Narduzzi "nardluca@gmail.com"
 }
-

@@ -4,18 +4,26 @@
 \alias{metfragging}
 \title{Wrapper function to online querying of m/z candidates in metfRag and get CCC re-ranking}
 \usage{
-metfragging(tni, ps_spectra, threshold, markers, pre_filter)
+metfragging(tni, ps_spectra, threshold, markers, pre_filter, n_candidates, database, token, ppm_error)
 }
 \arguments{
 \item{tni}{the reduced peakTable given by the CCC.peaktable or CCC.xsaFA functions}
 
 \item{ps_spectra}{the pseudospectra given by the ps_spec function}
 
-\item{threshold}{the threshold used to discard low intense MS/MS markers}
+\item{excl_int}{the percentage threshold used to discard low intense MS/MS markers}
 
 \item{markers}{a list of markers given from your own statistical analysis. If NULL, all the first most intense ion of each speudospectra are analyzed; WARNING = data file must be massive and it might lead to errors.}
 
 \item{pre_filter}{if TRUE, it uses the features measured by the CCC method to pre-filter candidates before performing in-silico fragmentation. It speeds up the process, but it is error-prone. default is set to FALSE}
+
+\item{n_candidates}{the number of candidates parent ions to be considered fro MS/MS analysis from the same spectrum.}
+
+\item{database}{the database to use to fetch candidate structures with no default. Please choose between "PubChem", "ExtendedPubChem", "ChemSpider" (it requires Chemspider token), "KEGG".}
+
+\item{token}{your personal ChemSpider token}
+
+\item{ppm_error}{the mass measurement error}
 }
 \value{
 a list of data.frames containing the outcome of metfRag reordered according to the CCC method
@@ -27,9 +35,8 @@ The function handles MSe data to obtain MS/MS analysis through the metfRag packa
 data(peakTable)
 tni <- CCC.peakTable(peakTable, polarity = "negative")
 ps_spectra <- ps_spec(tni, peakTable)
-results <- metfragging(tni, ps_spectra, markers = 3998)
+results <- metfragging(tni, ps_spectra, markers = 2713, database = "KEGG")
 }
 \author{
 Luca Narduzzi "nardluca@gmail.com"
 }
-

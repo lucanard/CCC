@@ -4,12 +4,14 @@
 \alias{ranking.2016}
 \title{Ranking function to get the best candidates from the metfRag analysis from .sdf files}
 \usage{
-ranking.2016(directory, tni)
+ranking.2016(directory, tni, sep)
 }
 \arguments{
 \item{directory}{where the sdf files are stored. The file name must correspond to the feature number (rowname) in the original peaktable}
 
 \item{tni}{a list of grouped features given by the apply.model function}
+
+\item{sep}{is the separator preferred in the kind of file (useful only for csv files). Default is the "comma". Any separator can be applied.}
 }
 \value{
 a list of SDF files reordered according to the CCC method parameters
@@ -25,4 +27,3 @@ candidates <- ranking.2016(system.file("extdata", "2016", package = "CCC"), tni)
 \author{
 Luca Narduzzi "nardluca@gmail.com"
 }
-

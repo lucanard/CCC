@@ -19,9 +19,8 @@ the function uses the xsaFA given by CAMERA to group the isotopic patterns and i
 }
 \examples{
 #do not run: try only with your own xsaFA object, it requires xcms and CAMERA
-tni <- CCC.xsaFA(xsaFA)
+#tni <- CCC.xsaFA(xsaFA)
 }
 \author{
 Luca Narduzzi "nardluca@gmail.com"
 }
-
