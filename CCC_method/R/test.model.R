@@ -11,6 +11,7 @@
 #' @import glmnet
 #' @import ppls
 #' @importFrom ROCR performance
+#' @importFrom ROCR prediction
 #' @export "test.model"
 #' @examples 
 #' STD_RP <- read.csv(system.file("extdata", "STD_RP.csv", package = "CCC"), row.names = 1, stringsAsFactors = FALSE)
