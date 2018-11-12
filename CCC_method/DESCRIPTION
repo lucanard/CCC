@@ -7,17 +7,16 @@ Author: Luca Narduzzi
 Maintainer: <nardluca@gmail.com>
 Description: The package is developed to build a CCC_model to predict the molecular substructures of a compound and use this information to rerank structural candidates proposed by fragmentation simulators
 Depends:
-    R (>= 3.0),
-    stringr (>= 1.0.0),
+R (>= 3.0),  stringr (>= 1.0.0),
 Imports: 
-    ppls,
-    glmnet,
-    fmcsR,
-    rcdk,
-    rinchi,
-    ChemmineR,
-    metfRag,
-    ROCR,
+ppls,
+glmnet,
+fmcsR,
+rcdk,
+rinchi,
+ChemmineR,
+metfRag,
+ROCR,
 License: GPL
 LazyData: TRUE
 RoxygenNote: 6.0.1
