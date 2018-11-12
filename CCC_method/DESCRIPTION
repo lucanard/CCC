@@ -5,9 +5,7 @@ Version: 0.2
 Date: 2015-11-26
 Author: Luca Narduzzi
 Maintainer: <nardluca@gmail.com>
-Description: The package is developed to build a CCC_model to predict the
-    molecular substructures of a compound and use this information to rerank
-    structural candidates proposed by fragmentation simulators
+Description: The package is developed to build a CCC_model to predict the molecular substructures of a compound and use this information to rerank structural candidates proposed by fragmentation simulators
 Depends:
     R (>= 3.0),
     stringr (>= 1.0.0),
