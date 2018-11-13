@@ -44,7 +44,6 @@ Last, install metfRag and the CCC_method from github
 
 ```R
 library(devtools)
-install_github("cdkr", "rajarshi", subdir="rinchi")
 install_github("c-ruttkies/MetFragR/metfRag")
 install_github("lucanard/CCC", subdir="CCC_method")
 ```
